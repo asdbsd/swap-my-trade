@@ -12,7 +12,8 @@ export class HeaderComponent{
   
   toggleProfile(profileUl: HTMLUListElement, event: Event) {
     event.preventDefault();
-    profileUl.style.display === 'none' ? profileUl.style.display = 'block' : profileUl.style.display = 'none'
+    
+    profileUl.style.display === 'block' ? profileUl.style.display = 'none' : profileUl.style.display = 'block'
   }
 
 }

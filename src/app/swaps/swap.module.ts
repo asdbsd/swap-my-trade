@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SwapsComponent } from './swaps.component';
 import { MySwapsComponent } from './my-swaps/my-swaps.component';
 import { SwapDetailsComponent } from './swap-details/swap-details.component';
+import { SwapsRoutingModule } from './swaps-routing.module';
 
 
 
@@ -13,7 +14,8 @@ import { SwapDetailsComponent } from './swap-details/swap-details.component';
     SwapDetailsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    SwapsRoutingModule
   ]
 })
 export class SwapModule { }
