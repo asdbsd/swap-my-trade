@@ -4,6 +4,7 @@ import { SwapsComponent } from './swaps.component';
 import { MySwapsComponent } from './my-swaps/my-swaps.component';
 import { SwapDetailsComponent } from './swap-details/swap-details.component';
 import { SwapsRoutingModule } from './swaps-routing.module';
+import { AddComponent } from './add/add.component';
 
 
 
@@ -11,7 +12,8 @@ import { SwapsRoutingModule } from './swaps-routing.module';
   declarations: [
     SwapsComponent,
     MySwapsComponent,
-    SwapDetailsComponent
+    SwapDetailsComponent,
+    AddComponent
   ],
   imports: [
     CommonModule,
