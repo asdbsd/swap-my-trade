@@ -1,0 +1,13 @@
+<form #form="ngForm" (ngSubmit)="onSubmitTrade(form)">
+    <label>Name</label><br>
+    <input name="name" #tradeNameInput="ngModel" ngModel type="text" required [minlength]="4">
+
+    <div class="error" *ngIf="tradeNameInput.invalid && tradeNameInput.errors?.['required']">
+        Name field is required.
+    </div>
+    <div class="error" *ngIf="tradeNameInput.touched && tradeNameInput.errors?.['minlength']">
+        Minimum name length is 4 letters!
+    </div>
+    <br>
+    <button [disabled]="tradeNameInput.invalid">Create Trade</button>
+</form>

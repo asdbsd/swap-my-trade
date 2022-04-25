@@ -10,10 +10,18 @@ export class HeaderComponent{
   constructor() { }
 
   
-  toggleProfile(profileUl: HTMLUListElement, event: Event) {
+
+  toggleNavigation(profileUl: HTMLUListElement, event: any) {
     event.preventDefault();
+    let displayCss = profileUl.style.display
     
-    profileUl.style.display === 'block' ? profileUl.style.display = 'none' : profileUl.style.display = 'block'
+
+    if(event.target.tagName === 'IMG') {
+      displayCss === 'block' ? profileUl.style.display = 'none' : profileUl.style.display = 'block'
+    } else if(event.target.tagName === 'A' && event.target.parentElement.nodeName === 'LI') {
+      displayCss === 'block' ? profileUl.style.display = 'none' : profileUl.style.display = 'block'
+    }
+    
   }
 
 }

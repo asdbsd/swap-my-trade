@@ -21,14 +21,14 @@
             <button type="button" routerLink="/register" class="btn btn-outline-success btn-sm px-4">Register</button>
 
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                <a (click)="toggleProfile(profileUl, $event)" class="d-block link-dark text-decoration-none">
+                <a (click)="toggleNavigation(profileUl, $event)" class="d-block link-dark text-decoration-none">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1024px-Circle-icons-profile.svg.png" alt="mdo" width="32" height="32" class="rounded-circle">
                 </a>
             </a>
             
             <div class="dropdown text-end">
-                <ul #profileUl class="dropdown-menu text-small">
-                    <li><a class="dropdown-item" routerLink="swaps/new">New SWAP</a></li>
+                <ul #profileUl (click)="toggleNavigation(profileUl, $event)" class="dropdown-menu text-small">
+                    <li><a class="dropdown-item" routerLink="swaps/add">New SWAP</a></li>
                     <li><a class="dropdown-item" routerLink="swaps/my-swaps">My Swaps</a></li>
                     <li><a class="dropdown-item" routerLink="profile">Profile</a></li>
                     <li>

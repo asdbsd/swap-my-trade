@@ -17,6 +17,7 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { SwapModule } from './swaps/swap.module';
 import { environment } from '../environments/environment';
+import { TradeModule } from './trades/trade.module';
 
 
 
@@ -34,6 +35,7 @@ import { environment } from '../environments/environment';
     UserModule,
     SwapModule,
     AppRoutingModule,
+    TradeModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())

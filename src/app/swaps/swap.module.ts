@@ -7,6 +7,7 @@ import { SwapsRoutingModule } from './swaps-routing.module';
 import { AddComponent } from './add/add.component';
 import { SwapService } from './swap.service';
 import { FormsModule } from '@angular/forms';
+import { TradeService } from '../trades/trade.service';
 
 
 
@@ -24,7 +25,8 @@ import { FormsModule } from '@angular/forms';
     
   ],
   providers: [
-    SwapService
+    SwapService,
+    TradeService
   ]
 })
 export class SwapModule { }

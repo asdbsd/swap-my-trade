@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { collectionData, Firestore, DocumentData, docSnapshots, addDoc} from '@angular/fire/firestore';
-import { collection, doc } from '@firebase/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, DocumentData, addDoc, DocumentReference} from '@angular/fire/firestore';
+import { collection, } from '@firebase/firestore';
 import { ISwap } from '../shared/interfaces/swaps';
 
 @Injectable({
@@ -14,7 +13,7 @@ export class SwapService {
   ) { }
 
 
-  addSwap(swap: ISwap) {
+  addSwap(swap: ISwap): Promise<DocumentReference<DocumentData>>{
     const swapRef = collection(this.firestore, 'books'); 
     return addDoc(swapRef, swap);
   }

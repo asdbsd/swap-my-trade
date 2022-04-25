@@ -1,9 +1,10 @@
 export interface ISwap {
+    _id: string,
     swapTitle: string,
     swapTrade: ITrade,
     _ownerId: IProfile,
     additionalNotes: string,
-    completedUntil: string,
+    openUntil: string,
     offers: [
         {
             status: {
