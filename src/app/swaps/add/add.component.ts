@@ -18,16 +18,10 @@ export class AddComponent implements OnInit {
    }
 
    ngOnInit() {
-    this.setDataField();
-    debugger;
+
    }
 
 
-
-  setDataField(): void {
-    this.date = new Date();
-    this.date = `${this.date.getFullYear()}-${this.date.getMonth()}-${this.date.getDate()}`
-  }
 
 
 
