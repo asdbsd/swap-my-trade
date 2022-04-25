@@ -1,7 +1,7 @@
 <h1 class="text-center">Swaps</h1>
 <div class="row">
     <div class="col-sm-2">
-        <h4>Filter by Trade</h4>
+        <h5>Filter by Trade</h5>
         <button type="button" class="btn btn-sm btn-outline-primary">WELDER</button>
         <button type="button" class="btn btn-sm btn-outline-primary">PLUMBER</button>
         <button type="button" class="btn btn-sm btn-outline-primary">CAR MECHANIC</button>
@@ -9,7 +9,7 @@
         <button type="button" class="btn btn-sm btn-outline-primary">ROOFER</button>
         <button type="button" class="btn btn-sm btn-outline-primary">CARPET FITTER</button>
         <button type="button" class="btn btn-sm btn-outline-primary">GARDENER</button>
-        <h4>Filter by County</h4>
+        <h5>Filter by County</h5>
         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
             <input id="typeahead-focus" type="search" class="form-control" placeholder="County..."
                 aria-label="Search" />
@@ -173,3 +173,22 @@
     </div>
 
 </div>
+
+
+
+<!-- <div>
+    <h1>Articles List</h1>
+    <p>Below is a list of dynamic article links</p>
+   <div class="row" ng-if="i % 3 === 0">
+      <div class="col-sm-4" *ngFor="let article of articles$ | async; index as i">
+        <div class="thumbnail">
+          <a [routerLink]="['/articles', article.id]">
+            <img [src]="article.img" [alt]="article.title" style="width:100%">
+            <div class="caption">
+              <p>{{ article.description}}</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+   </div> -->

@@ -103,6 +103,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "swap-my-trade:build:production",
+            "firebaseProject": "swapmytrade",
+            "firebaseHostingSite": "swapmytrade"
+          }
         }
       }
     }
