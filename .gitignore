@@ -6,6 +6,7 @@
 
 # Node
 /node_modules
+/src/environments
 npm-debug.log
 yarn-error.log
 
@@ -43,5 +44,7 @@ Thumbs.db
 .firebase
 *-debug.log
 .runtimeconfig.json
+
+/src/environments
 
 
