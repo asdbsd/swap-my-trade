@@ -18,6 +18,9 @@ import { ContactComponent } from './contact/contact.component';
 import { SwapModule } from './swaps/swap.module';
 import { environment } from '../environments/environment';
 import { TradeModule } from './trades/trade.module';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { GlobalCurrenTUserReducer } from './+store/reducers';
 
 
 
@@ -38,7 +41,9 @@ import { TradeModule } from './trades/trade.module';
     TradeModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore())
+    provideFirestore(() => getFirestore()),
+    StoreModule.forRoot({ global: GlobalCurrenTUserReducer }),
+    StoreDevtoolsModule.instrument({})
   ],
   providers: [],
   bootstrap: [AppComponent]

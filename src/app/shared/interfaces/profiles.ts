@@ -6,5 +6,6 @@ export interface IProfile {
     lastName: string,
     phoneNumber: string,
     profileImg: string,
-    username: string
+    username: string,
+    mySwaps: []
 }
