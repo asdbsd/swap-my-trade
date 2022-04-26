@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { ITrade } from 'src/app/shared/interfaces/trades';
+import { TradeService } from 'src/app/trades/trade.service';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  trades$: Observable<ITrade[]>
 
-  ngOnInit(): void {
+  constructor(
+    private tradeService: TradeService
+  ) {
+    this.trades$ = this.tradeService.getTrades();
   }
+
+
+  ngOnInit() {
+  }
+
+  ngOnDestroy(): void {
+
+  }
+
+
 
 }

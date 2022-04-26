@@ -50,38 +50,60 @@
         <h4 class="mb-3">Create new SWAP</h4>
         <form class="needs-validation" #form="ngForm" (ngSubmit)="onCreateSwap(form)">
             <div class="row g-3">
+
                 <div class="col-sm-6">
                     <label class="form-label">Swap Title</label>
-                    <input #swapTitleInput="ngModel" ngModel type="text"
-                        class="form-control" name="swapTitle" placeholder="Looking for plumber for swap a trade...">
-
+                    <input #titleInput="ngModel" ngModel type="text" class="form-control" name="swapTitle"
+                        placeholder="Looking for plumber for swap a trade..." required [minlength]="5">
+                    <div class="error" *ngIf="titleInput.touched && titleInput.errors?.['required']">
+                        Title is required.
+                    </div>
+                    <div class="error" *ngIf="titleInput.touched && titleInput.errors?.['minlength']">
+                        Title must consist of minimum 5 characters.
+                    </div>
                 </div>
-
 
                 <div class="col-sm-3">
                     <label for="state" class="form-label">Select Trade</label>
-                    <select #tradeSelect="ngModel" ngModel class="form-select" name="trades">
-                        <option *ngFor="let trade of trades" >{{trade.name}}</option>
+                    <select class="form-select" aria-label="Select Trade" *ngIf="(trades$ | async) as trades" ngModel
+                        class="form-select" name="trade">
+                        <option value="">Select Trade</option>
+                        <option *ngFor="let trade of trades" [value]="trade._id">{{trade.name}}</option>
                     </select>
-                    <div class="invalid-feedback">
-                        Please provide a valid state.
-                    </div>
                 </div>
 
                 <div class="col-sm-3">
                     <label class="form-label">Open Until</label>
-                    <input #completeUntilInput="ngModel" ngModel type="date" class="form-control" name="Open Until">
-                    <div class="invalid-feedback">
-                        Valid last name is required.
+                    <input #dateInput="ngModel" ngModel type="date" class="form-control" name="openUntil" required
+                        [minlength]="10" [maxlength]="10">
+
+                    <div class="error" *ngIf="dateInput.touched && dateInput.errors?.['required']">
+                        Date is required.
                     </div>
+                    <div class="error" *ngIf="dateInput.touched && dateInput.errors?.['minlength']">
+                        Date minimum length is 11 characters.
+                    </div>
+                    <div class="error" *ngIf="dateInput.touched && dateInput.errors?.['maxlength']">
+                        Date minimum length is 11 characters.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Add pictures</label>
+                    <input class="form-control" type="file" name="swapImages" ngModel multiple>
                 </div>
 
                 <div class="col-12">
                     <label>Additional Swap Notes</label>
-                    <textarea #additionalNotesInput="ngModel" ngModel class="form-control" name="additionalNotes"
-                        rows="5"></textarea>
-                    <div class="invalid-feedback">
-                        Your username is required.
+                    <textarea ngModel class="form-control" name="additionalNotes" rows="5" #noteInput="ngModel" required [minlength]="5" [maxLength]="500"></textarea>
+                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['required']">
+                        Date is required.
+                    </div>
+                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['minlength']">
+                        Date minimum length is 5 characters.
+                    </div>
+                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['maxlength']">
+                        Date minimum length is 255 characters.
                     </div>
                 </div>
 

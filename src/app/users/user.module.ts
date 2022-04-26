@@ -4,7 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserRoutingModule } from './user-routing.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TradeService } from '../trades/trade.service';
 
 
 
@@ -22,6 +22,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     LoginComponent,
     RegisterComponent,
     ProfileComponent
+  ],
+  providers: [
+    TradeService
   ]
 })
 export class UserModule { }

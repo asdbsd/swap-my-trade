@@ -22,7 +22,6 @@ import { TradeService } from '../trades/trade.service';
     CommonModule,
     FormsModule,
     SwapsRoutingModule,
-    
   ],
   providers: [
     SwapService,
