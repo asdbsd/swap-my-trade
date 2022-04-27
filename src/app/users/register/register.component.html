@@ -1,43 +1,72 @@
-<div class="row align-items-center g-lg-5 py-5">
+<div class="row align-items-top g-lg-5 py-5">
     <div class="col-lg-7 text-center text-lg-start">
         <h1 class="display-4 fw-bold lh-1 mb-3">Register now to begin swaping yur trades.</h1>
         <p class="col-lg-10 fs-4">Make sure to register in order to get access to all our features. Do not hesitate to
             register now if you are looking to swap your trade, and find the fastet way to complete your tasks.</p>
     </div>
     <div class="col-md-10 mx-auto col-lg-5">
-        <form class="p-4 p-md-5 border rounded-3 bg-light">
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="Frist Name">
-                <label for="floatingInput">First Name</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="Last Name">
-                <label for="floatingInput">Last Name</label>
-            </div>
+        <form class="p-4 p-md-5 border rounded-3 bg-light" #form="ngForm" (ngSubmit)="onFormSubmit(form)">
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                <input name="email" #emailInput="ngModel" ngModel type="email" class="form-control"
+                    placeholder="name@example.com" required email>
                 <label for="floatingInput">Email address</label>
-                <p>Email will be used to allow you login.</p>
+                <div class="error" *ngIf="emailInput.touched && emailInput.errors?.['required']">
+                    Email is required.
+                </div>
+                <div class="error" *ngIf="emailInput.touched && emailInput.errors?.['email']">
+                    Input must be an email.
+                </div>
+                <span class="note-span">Email will be used to allow you login.</span>
+            </div>
+            <div class="form-floating mb-3">
+                <input name="firstName" #firstName="ngModel" ngModel type="text" class="form-control"
+                    placeholder="Frist Name" required [minlength]="2">
+                <label for="floatingInput">First Name</label>
+                <div class="error" *ngIf="firstName.touched && firstName.errors?.['required']">
+                    First Name is required.
+                </div>
+                <div class="error" *ngIf="firstName.touched && firstName.errors?.['minlength']">
+                    First Name must consist of mimum 2 characters.
+                </div>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" name="lastName" #lastName="ngModel" ngModel type="text"
+                    placeholder="Last Name" required [minlength]="2">
+                <label for="floatingInput">Last Name</label>
+                <div class="error" *ngIf="lastName.touched && lastName.errors?.['required']">
+                    Last Name is required.
+                </div>
+                <div class="error" *ngIf="lastName.touched && lastName.errors?.['minlength']">
+                    Last Name must consist of mimum 2 characters.
+                </div>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                <input name="password" #passwordInput="ngModel" ngModel type="password" class="form-control"
+                    placeholder="Password" required [minlength]="6" [maxlength]="32">
                 <label for="floatingPassword">Password</label>
+                <div class="error" *ngIf="passwordInput.touched && passwordInput.errors?.['required']">
+                    Password is required.
+                </div>
+                <div class="error" *ngIf="passwordInput.touched && passwordInput.errors?.['minlength']">
+                    Password must be at least 6 characters long.
+                </div>
+                <div class="error" *ngIf="passwordInput.touched && passwordInput.errors?.['maxlength']">
+                    Password must be at maximum 32 characters long.
+                </div>
             </div>
-
-
+            <hr>
             <div class="col-md-6" *ngIf="(trades$ | async) as trades" class="checkbox-box">
+                <h6><b>Please select your own trades</b></h6>
                 <div *ngFor="let trade of trades" class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox">
+                    <input name="{{trade._id}}" ngModel class="form-check-input" type="checkbox">
                     <label class="form-check-label">{{trade.name}}</label>
                 </div>
             </div>
 
 
-
-
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+            <button name="submit" class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
             <hr class="my-4">
             <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
         </form>

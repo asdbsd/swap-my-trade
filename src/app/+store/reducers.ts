@@ -1,18 +1,25 @@
 import { createReducer, on } from '@ngrx/store';
-import { clearCurrentUser, getCurrentUser, setCurrentUser } from './actions';
+import { IProfile } from '../shared/interfaces/profiles';
+import { addError, clearCurrentUser, clearError, setCurrentUser } from './actions';
 
-export interface IGlobalCurrentUser {
-    readonly currentUser: object | null;
+export interface IAppState {
+    state: IGlobalState
 }
 
-const initialCurrentUserState: IGlobalCurrentUser = {
+export interface IGlobalState {
+    currentUser: IProfile | null;
+    error: string;
+}
+
+const initialCurrentUserState: IGlobalState = {
     currentUser: null,
+    error: ''
 }
 
 export const GlobalCurrenTUserReducer = createReducer(
     initialCurrentUserState,
-    on(getCurrentUser, (state) => ({ ...state }) ),
-    on(setCurrentUser, (state, { currentUser }) => ({...state, currentUser })),
-    on(clearCurrentUser, () => ({ ...initialCurrentUserState }))
+    on(setCurrentUser, (state: IGlobalState, { currentUser }) => ({ ...state, currentUser })),
+    on(clearCurrentUser, () => ({ ...initialCurrentUserState })),
+    on(addError, (state: IGlobalState, { error }) => ({ ...state, error })),
+    on(clearError, (state: IGlobalState) => ({ ...state, error: '' }))
 );
-

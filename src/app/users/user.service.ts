@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { collectionData, Firestore, DocumentReference } from '@angular/fire/firestore';
-import { addDoc, collection } from '@firebase/firestore';
+import { collectionData, Firestore, DocumentReference, docData } from '@angular/fire/firestore';
+import { addDoc, collection, doc } from '@firebase/firestore';
 import { Observable } from 'rxjs';
-import { IProfile } from '../shared/interfaces/profiles';
-import { getDbReference } from '../shared/utils';
+import { IProfile, IRegisterProfile } from '../shared/interfaces/profiles';
+import { getCollectionReference } from '../shared/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +14,18 @@ export class UserService {
     private db: Firestore
   ) { }
 
-  addProfile(profile: IProfile): Promise<DocumentReference> {
-    return addDoc(getDbReference(this.db, 'profiles'), profile);
+  addProfile(profile: IRegisterProfile): Promise<DocumentReference> {
+    return addDoc(getCollectionReference(this.db, 'profiles'), profile);
   }
 
-  // getProfile(id)) {
-  //   return collectionData(getDbReference(this.db, 'profiles'));
-  // }
+  getProfileById(id: string) {
+    const swapRef = doc(this.db, `profiles/${id}`);
+    return docData(swapRef, { idField: '_id' }) as Observable<IProfile>;
+  }
+
+  getProfiles(): Observable<IProfile[]> {
+    return collectionData(getCollectionReference(this.db, 'profiles'), { idField: '_id'}) as Observable<IProfile[]>;
+  }
 
 
 

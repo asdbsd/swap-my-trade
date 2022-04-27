@@ -1,11 +1,18 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store'
+import { clearCurrentUser } from 'src/app/+store/actions';
+import { IAppState } from 'src/app/+store/reducers';
+import { currentUserSelector } from 'src/app/+store/selectors';
+import { IProfile } from 'src/app/shared/interfaces/profiles';
+
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   public displayCss!: string
   private profileUl!: HTMLUListElement
 
@@ -16,10 +23,22 @@ export class HeaderComponent {
     }
   }
 
-  constructor() { }
+  
+  isLoggedIn: boolean = false;
+  
 
+  constructor(
+    private store: Store<IAppState>,
+    private router: Router
+  ) {  }
 
-  toggleNavigation(profileUl: HTMLUListElement, event?: any) {
+  ngOnInit() {
+    this.store.select(currentUserSelector).subscribe(profile => {
+      this.isLoggedIn = profile !== null ? true : false
+    });
+  }
+
+  toggelProfileNav(profileUl: HTMLUListElement, event?: any) {
     event.preventDefault();
     this.displayCss = profileUl.style.display;
 
@@ -30,7 +49,12 @@ export class HeaderComponent {
     }
     this.displayCss = profileUl.style.display;
     this.profileUl = profileUl;
+  }
 
+  onLogout(event: Event) {
+    event.preventDefault();
+    this.store.dispatch(clearCurrentUser());
+    this.router.navigate(['/']);  
   }
 
 }

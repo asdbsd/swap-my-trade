@@ -39,10 +39,10 @@ import { GlobalCurrenTUserReducer } from './+store/reducers';
     SwapModule,
     AppRoutingModule,
     TradeModule,
+    StoreModule.forRoot({ state: GlobalCurrenTUserReducer }),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    StoreModule.forRoot({ global: GlobalCurrenTUserReducer }),
     StoreDevtoolsModule.instrument({})
   ],
   providers: [],

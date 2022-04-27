@@ -1,67 +1,81 @@
 <main class="form-signin text-center">
-    <form>
-        <img class="mb-4" src="https://cdn-icons-png.flaticon.com/512/1484/1484986.png" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+  <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+    <img class="mb-4" src="https://cdn-icons-png.flaticon.com/512/1484/1484986.png" alt="" width="72" height="57">
+    <h1 class="h3 mb-3 fw-normal">Please login.</h1>
 
-        <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-            <label for="floatingInput">Email address</label>
+    <div class="form-floating">
+      <input name="email" #emailInput="ngModel" ngModel type="email" class="form-control" placeholder="name@example.com"
+        required email>
+        <div class="error" *ngIf="emailInput.touched && emailInput.errors?.['required']">
+          Email is required.
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-            <label for="floatingPassword">Password</label>
-        </div>
+      <label>Email address</label>
 
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" value="remember-me">
-            </label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-    </form>
+      <div class="error" *ngIf="emailInput.touched && emailInput.errors?.['email']">
+        Input must be an email.
+      </div>
+    </div>
+    <div class="form-floating">
+      <input name="password" #passwordInput="ngModel" ngModel type="password" class="form-control"
+        placeholder="Password" required [minlength]="6">
+      <label>Password</label>
+      <div class="error" *ngIf="passwordInput.touched && passwordInput.errors?.['required']">
+        Password is required.
+      </div>
+      <div class="error" *ngIf="passwordInput.touched && passwordInput.errors?.['minlength']">
+        Password must consist of minimum 6 characters.
+      </div>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary">Login</button>
+  </form>
 </main>
 
 
 
 <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-    <div class="col d-flex align-items-start">
-      <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#toggles2"></use></svg>
-      </div>
-      <div>
-        <h2>Featured title</h2>
-        <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-        <a href="#" class="btn btn-primary">
-          Primary button
-        </a>
-      </div>
+  <div class="col d-flex align-items-start">
+    <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+      <svg class="bi" width="1em" height="1em">
+        <use xlink:href="#toggles2"></use>
+      </svg>
     </div>
-    <div class="col d-flex align-items-start">
-      <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
-      </div>
-      <div>
-        <h2>Featured title</h2>
-        <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-        <a href="#" class="btn btn-primary">
-          Primary button
-        </a>
-      </div>
-    </div>
-    <div class="col d-flex align-items-start">
-      <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
-        <svg class="bi" width="1em" height="1em"><use xlink:href="#tools"></use></svg>
-      </div>
-      <div>
-        <h2>Featured title</h2>
-        <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and probably just keep going until we run out of words.</p>
-        <a href="#" class="btn btn-primary">
-          Primary button
-        </a>
-      </div>
+    <div>
+      <h2>Featured title</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and
+        probably just keep going until we run out of words.</p>
+      <a href="#" class="btn btn-primary">
+        Primary button
+      </a>
     </div>
   </div>
-
-
-  
+  <div class="col d-flex align-items-start">
+    <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+      <svg class="bi" width="1em" height="1em">
+        <use xlink:href="#cpu-fill"></use>
+      </svg>
+    </div>
+    <div>
+      <h2>Featured title</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and
+        probably just keep going until we run out of words.</p>
+      <a href="#" class="btn btn-primary">
+        Primary button
+      </a>
+    </div>
+  </div>
+  <div class="col d-flex align-items-start">
+    <div class="icon-square bg-light text-dark flex-shrink-0 me-3">
+      <svg class="bi" width="1em" height="1em">
+        <use xlink:href="#tools"></use>
+      </svg>
+    </div>
+    <div>
+      <h2>Featured title</h2>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and
+        probably just keep going until we run out of words.</p>
+      <a href="#" class="btn btn-primary">
+        Primary button
+      </a>
+    </div>
+  </div>
+</div>

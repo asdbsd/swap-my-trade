@@ -1,12 +1,15 @@
 import { collection, Firestore } from "@angular/fire/firestore"
 
-export const getDbReference = (db: Firestore, reference: string) => {
+export const getCollectionReference = (db: Firestore, reference: string) => {
   return collection(db, reference)
+}
+
+export const getErrorText = (error: any) => {
+  return error.code.split('/')[1].split('-').map((v: string) => v.toLowerCase()).map((value: string) => value[0].toUpperCase() + value.slice(1)).join(' ')
 }
 
 
 // userd in addSwapComponent
-
 export const validations = {
   "notes": (note: string): boolean => {
     note.trim();

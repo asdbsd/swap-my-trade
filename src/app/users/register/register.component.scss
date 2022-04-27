@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 330px;
   padding: 15px;
-  margin: auto;
+  margin: auto 5%;
 }
 
 .form-signin .checkbox {
@@ -27,4 +27,14 @@
 
 .form-switch {
   margin-bottom: 15px;
+}
+.error{
+  color: red;
+  font-size: small;
+  margin-left: 1%;
+}
+.note-span {
+  margin: 0% 1%;
+  font-size:small;
+  color: gray;
 }

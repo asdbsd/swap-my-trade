@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable} from 'rxjs';
+import { Store } from '@ngrx/store'
 import { ITrade } from 'src/app/shared/interfaces/trades';
 import { TradeService } from 'src/app/trades/trade.service';
+import { UserService } from '../user.service';
+import { addError, clearError, setCurrentUser } from 'src/app/+store/actions';
+import { AuthService } from 'src/app/core/auth.service';
+import { getErrorText } from 'src/app/shared/utils';
 
 @Component({
   selector: 'app-register',
@@ -13,19 +20,67 @@ export class RegisterComponent implements OnInit {
   trades$: Observable<ITrade[]>
 
   constructor(
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private userService: UserService,
+    private router: Router,
+    private store: Store<any>,
+    private authService: AuthService
   ) {
     this.trades$ = this.tradeService.getTrades();
   }
 
 
-  ngOnInit() {
-  }
-
-  ngOnDestroy(): void {
+  ngOnInit(): void {
 
   }
 
+  async onFormSubmit(form: NgForm) {
+    if (form.invalid) { return; }
 
+    const myTrades = [];
+    for (let [k, v] of Object.entries(form.value)) { v === true ? myTrades.push(k) : null; }
 
+    if (myTrades.length < 1) { return };
+
+    let response;
+    try {
+      response = await this.authService.register({ email: form.value.email, password: form.value.password })
+    } catch (err) {
+      this.store.dispatch(addError({ error: getErrorText(err) }));
+      setTimeout(() => {
+        this.store.dispatch(clearError());
+      }, 3500)
+      return;
+    }
+
+    const profile = Object.assign(
+      {},
+      {
+        uid: response.user.uid,
+        email: form.value.email,
+        firstName: form.value.firstName,
+        lastName: form.value.lastName,
+        phoneNumber: '',
+        profileImg: '/assets/swap-my-trade-profile.png',
+        myTrades: myTrades,
+        completed: 0,
+        mySwaps: []
+      }
+    )
+
+    let profileRef;
+    try {
+      profileRef = await this.userService.addProfile(profile);
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+    
+    this.userService.getProfileById(profileRef.id).subscribe(profile => {
+      this.store.dispatch(setCurrentUser({ currentUser: profile }));
+    })
+    this.router.navigate(['/swaps']);
+    
+
+  }
 }

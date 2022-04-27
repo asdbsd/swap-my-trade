@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
-import { Store } from '@ngrx/store'
-import { getCurrentUser } from './+store/selectors';
+import { Observable } from 'rxjs';
+import { IAppState } from './+store/reducers';
+import { Store } from '@ngrx/store';
+import { currentErrorSelector } from './+store/selectors';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  currentUser$ = this.rxStore.select(getCurrentUser);
+export class AppComponent{
 
-  constructor(
-    private rxStore: Store<any>
-  ) {
-  }
+  error$: Observable<string> = this.store.select(currentErrorSelector);
+  constructor( 
+    private store: Store<IAppState>
+  ) { }
 
 }
