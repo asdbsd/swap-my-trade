@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store'
 import { ITrade } from 'src/app/shared/interfaces/trades';
 import { TradeService } from 'src/app/trades/trade.service';
@@ -9,6 +9,7 @@ import { UserService } from '../user.service';
 import { addError, clearError, setCurrentUser } from 'src/app/+store/actions';
 import { AuthService } from 'src/app/core/auth.service';
 import { getErrorText } from 'src/app/shared/utils';
+import { currentErrorSelector } from 'src/app/+store/selectors';
 
 @Component({
   selector: 'app-register',
@@ -18,6 +19,7 @@ import { getErrorText } from 'src/app/shared/utils';
 export class RegisterComponent implements OnInit {
 
   trades$: Observable<ITrade[]>
+  error$: Observable<string> = this.store.select(currentErrorSelector);
 
   constructor(
     private tradeService: TradeService,
@@ -40,7 +42,13 @@ export class RegisterComponent implements OnInit {
     const myTrades = [];
     for (let [k, v] of Object.entries(form.value)) { v === true ? myTrades.push(k) : null; }
 
-    if (myTrades.length < 1) { return };
+    if (myTrades.length < 1) {
+      this.store.dispatch(addError({ error: 'At least one trade must be selected.' }));
+      setTimeout(() => {
+        this.store.dispatch(clearError());
+      }, 3500)
+      return
+    };
 
     let response;
     try {
@@ -75,12 +83,12 @@ export class RegisterComponent implements OnInit {
       console.log(err);
       return;
     }
-    
+
     this.userService.getProfileById(profileRef.id).subscribe(profile => {
       this.store.dispatch(setCurrentUser({ currentUser: profile }));
     })
     this.router.navigate(['/swaps']);
-    
+
 
   }
 }

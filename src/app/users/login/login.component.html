@@ -1,5 +1,13 @@
 <main class="form-signin text-center">
   <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+    <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+          <use xlink:href="#exclamation-triangle-fill" />
+      </svg>
+      <div>
+          {{error}}
+      </div>
+  </div>
     <img class="mb-4" src="https://cdn-icons-png.flaticon.com/512/1484/1484986.png" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please login.</h1>
 

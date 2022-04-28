@@ -28,12 +28,11 @@ export class SwapService {
     const swapRef = collection(this.firestore, 'swaps');
     return collectionData(swapRef, { idField: '_id'}) as Observable<ISwap[]>;
   }
-
   
-  // updateBook(swap: ISwap) {
-  //   const bookDocRef = doc(this.firestore, `books/${swap.id}`);
-  //   return setDoc(bookDocRef, swap);
-  // }
+  updateSwap(swap: ISwap) {
+    const bookDocRef = doc(this.firestore, `swaps`);
+    return setDoc(bookDocRef, swap);
+  }
   
   // partialSwapUpdate(swap: ISwap, amount: number) {
   //   const bookDocRef = doc(this.firestore, `books/${swap.id}`);

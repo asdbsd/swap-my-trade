@@ -6,6 +6,14 @@
     </div>
     <div class="col-md-10 mx-auto col-lg-5">
         <form class="p-4 p-md-5 border rounded-3 bg-light" #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+            <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>
+                    {{error}}
+                </div>
+            </div>
 
             <div class="form-floating mb-3">
                 <input name="email" #emailInput="ngModel" ngModel type="email" class="form-control"

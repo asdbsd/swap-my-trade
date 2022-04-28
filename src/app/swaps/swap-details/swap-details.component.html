@@ -1,43 +1,23 @@
 <div class="row" *ngIf="swap">
     <div class="col-lg-4">
-        <div class="card mb-4">
+        <div *ngIf="profile" class="card mb-4">
             <div class="card-body text-center">
-                <img src="/assets/swap-my-trade-profile.png" alt="avatar"
-                    class="rounded-circle img-fluid" style="width: 150px;">
-                <h5 class="my-3">{{swap}}</h5>
-                <p class="text-muted mb-1">{{swap}}</p>
-                <p class="text-muted mb-4">{{swap}}</p>
+                <img src="{{profile.profileImg}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                <h5 class="my-3">{{profile.firstName}} {{profile.lastName}}</h5>
+
+                <span *ngFor="let profileTrade of profile.myTrades" class="text-muted mb-1">{{profileTrade}}</span>
+
+
                 <!-- <div class="d-flex justify-content-center mb-2">
                     <button type="button" class="btn btn-primary">Follow</button>
                     <button type="button" class="btn btn-outline-primary ms-1">Message</button>
                 </div> -->
             </div>
         </div>
-        <div class="card mb-4 mb-lg-0">
-            <div class="card-body p-0">
-                <ul class="list-group list-group-flush rounded-3">
-                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                        <i class="fas fa-globe fa-lg text-warning"></i>
-                        <p class="mb-0">https://mdbootstrap.com</p>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                        <i class="fab fa-github fa-lg" style="color: #333333;"></i>
-                        <p class="mb-0">mdbootstrap</p>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                        <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
-                        <p class="mb-0">@mdbootstrap</p>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                        <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
-                        <p class="mb-0">mdbootstrap</p>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                        <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
-                        <p class="mb-0">mdbootstrap</p>
-                    </li>
-                </ul>
-            </div>
+        <h5 class="text-center">Swap detail Images</h5>
+        <div *ngIf="images" class="card mb-4 mb-lg-0">
+            <img *ngFor="let image of images" src="{{image}}" class="img-thumbnail rounded mx-auto">
+
         </div>
     </div>
     <div class="col-lg-8">

@@ -48,6 +48,14 @@
     </div>
     <div class="col-md-7 col-lg-8">
         <h4 class="mb-3">Create new SWAP</h4>
+        <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                <use xlink:href="#exclamation-triangle-fill" />
+            </svg>
+            <div>
+                {{error}}
+            </div>
+        </div>
         <form class="needs-validation" #form="ngForm" (ngSubmit)="onCreateSwap(form)">
             <div class="row g-3">
 
@@ -68,7 +76,10 @@
                     <select class="form-select" aria-label="Select Trade" *ngIf="(trades$ | async) as trades" ngModel
                         class="form-select" name="trade">
                         <option value="">Select Trade</option>
-                        <option *ngFor="let trade of trades" [value]="trade._id">{{trade.name}}</option>
+                        <ng-container *ngIf="(trades$ | async) as trades">
+                            <option *ngFor="let trade of trades" [value]="trade._id">{{trade.name}}</option>
+                        </ng-container>
+
                     </select>
                 </div>
 
@@ -90,12 +101,13 @@
 
                 <div class="mb-3">
                     <label class="form-label">Add pictures</label>
-                    <input class="form-control" type="file" name="swapImages" ngModel multiple>
+                    <input (change)="onImgUpload($event)" accept=".jpg,.JPG,.jpeg,.png" class="form-control" type="file" name="swapImages" multiple>
                 </div>
 
                 <div class="col-12">
                     <label>Additional Swap Notes</label>
-                    <textarea ngModel class="form-control" name="additionalNotes" rows="5" #noteInput="ngModel" required [minlength]="5" [maxLength]="500"></textarea>
+                    <textarea ngModel class="form-control" name="additionalNotes" rows="5" #noteInput="ngModel" required
+                        [minlength]="5" [maxLength]="500"></textarea>
                     <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['required']">
                         Date is required.
                     </div>
@@ -106,8 +118,11 @@
                         Date minimum length is 255 characters.
                     </div>
                 </div>
-
-                <button class="w-100 btn btn-primary btn-lg">Create Swap</button>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{uploading}}%"
+                        attr.aria-valuenow="{{uploading}}" aria-valuemin="0" aria-valuemax="100">Uploading {{uploading}}%</div>
+                </div>
+                <button class="w-100 btn btn-primary btn-lg" [disabled]="uploading > 0">Create Swap</button>
             </div>
         </form>
     </div>

@@ -2,9 +2,10 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 // Firebase methods
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app'; // App init
+import { provideAuth,getAuth } from '@angular/fire/auth'; // App auth
+import { provideFirestore, getFirestore } from '@angular/fire/firestore'; // App db
+import { getStorage, provideStorage } from '@angular/fire/storage'; // App Storage
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +21,7 @@ import { environment } from '../environments/environment';
 import { TradeModule } from './trades/trade.module';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
 import { GlobalCurrenTUserReducer } from './+store/reducers';
 
 
@@ -43,6 +45,7 @@ import { GlobalCurrenTUserReducer } from './+store/reducers';
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideStorage(() => getStorage()),
     StoreDevtoolsModule.instrument({})
   ],
   providers: [],

@@ -28,9 +28,14 @@
                 </svg>
             </div>
             <div class="col p-4 d-flex flex-column position-static">
-                <h6>Requested Trade</h6>
-                <strong class="d-inline-block mb-2 text-primary">{{swap.trade}}</strong>
-                <a [routerLink]="['/swaps', swap._id]"><h3 class="mb-0">{{swap.swapTitle}}</h3></a>
+                <a [routerLink]="['/swaps', swap._id]">
+                    <h3 class="mb-0">{{swap.swapTitle}}</h3>
+                </a>
+                <div>
+                    <h6>Requested Trade</h6>
+                    <strong class="d-inline-block mb-2 text-primary">{{swap.trade}}</strong>
+                </div>
+
                 <div class="mb-1 text-muted"><b>Open Until: </b>{{swap.openUntil}}<br>
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                         <button type="button" class="btn btn-sm btn-outline-primary">Open</button>
@@ -38,7 +43,8 @@
                         <button type="button" class="btn btn-sm btn-outline-danger">Delete</button>
                     </div>
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
-                        <button type="button" class="btn btn-sm btn-outline-primary" [routerLink]="['/swaps', swap._id]">Open</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            [routerLink]="['/swaps', swap._id]">Open</button>
                         <button type="button" class="btn btn-sm btn-outline-success">Register to swap</button>
                     </div>
                     <hr>

@@ -8,6 +8,8 @@ import { Store } from '@ngrx/store';
 import { addError, clearError, setCurrentUser } from 'src/app/+store/actions';
 import { Router } from '@angular/router';
 import { getErrorText } from 'src/app/shared/utils';
+import { currentErrorSelector } from 'src/app/+store/selectors';
+import { IAppState } from 'src/app/+store/reducers';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +18,12 @@ import { getErrorText } from 'src/app/shared/utils';
 })
 export class LoginComponent implements OnDestroy {
 
+  error$: Observable<string> = this.store.select(currentErrorSelector);
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private store: Store,
+    private store: Store<IAppState>,
     private router: Router
   ) { }
 

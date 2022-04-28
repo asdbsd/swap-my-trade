@@ -18,6 +18,16 @@ export interface ISwap {
             tradesRequested: string[],
             user: string
         }],
+    swapOffer: {
+        status: {
+            accepted: boolean,
+            pending: boolean,
+            declined: boolean
+        },
+        swapStartDate: string,
+        swapEndDate: string,
+        user: string
+    }
     status: {
         completed: Boolean,
         open: Boolean
