@@ -122,7 +122,7 @@
                     <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{uploading}}%"
                         attr.aria-valuenow="{{uploading}}" aria-valuemin="0" aria-valuemax="100">Uploading {{uploading}}%</div>
                 </div>
-                <button class="w-100 btn btn-primary btn-lg" [disabled]="uploading > 0">Create Swap</button>
+                <button class="w-100 btn btn-primary btn-lg" [disabled]="isUploading">Create Swap</button>
             </div>
         </form>
     </div>

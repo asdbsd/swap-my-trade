@@ -1,11 +1,11 @@
-<div class="row" *ngIf="swap">
+<div class="row">
     <div class="col-lg-4">
         <div *ngIf="profile" class="card mb-4">
             <div class="card-body text-center">
                 <img src="{{profile.profileImg}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
                 <h5 class="my-3">{{profile.firstName}} {{profile.lastName}}</h5>
-
-                <span *ngFor="let profileTrade of profile.myTrades" class="text-muted mb-1">{{profileTrade}}</span>
+                <h5 *ngFor="let profileTrade of profile.myTrades"><span class="badge bg-info">{{profileTrade}}</span>
+                </h5>
 
 
                 <!-- <div class="d-flex justify-content-center mb-2">
@@ -15,20 +15,19 @@
             </div>
         </div>
         <h5 class="text-center">Swap detail Images</h5>
-        <div *ngIf="images" class="card mb-4 mb-lg-0">
-            <img *ngFor="let image of images" src="{{image}}" class="img-thumbnail rounded mx-auto">
-
+        <div *ngIf="swapOfferImages" class="card mb-4 mb-lg-0">
+            <img *ngFor="let image of swapOfferImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
         </div>
     </div>
-    <div class="col-lg-8">
-        <div class="card mb-4">
+    <div class="col-lg-6">
+        <div *ngIf="mySwap" class="card mb-4">
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-3">
                         <p class="mb-0">Swap</p>
                     </div>
                     <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{swap.swapTitle}}</p>
+                        <p class="text-muted mb-0">{{mySwap.swapTitle}}</p>
                     </div>
                 </div>
                 <hr>
@@ -37,7 +36,7 @@
                         <p class="mb-0">Trade requested</p>
                     </div>
                     <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{swap.trade}}</p>
+                        <p class="text-muted mb-0">{{mySwap.trade}}</p>
                     </div>
                 </div>
                 <hr>
@@ -46,7 +45,7 @@
                         <p class="mb-0">Swap exipiry</p>
                     </div>
                     <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{swap.openUntil}}</p>
+                        <p class="text-muted mb-0">{{mySwap.openUntil}}</p>
                     </div>
                 </div>
                 <hr>
@@ -55,7 +54,7 @@
                         <p class="mb-0">Swap offers</p>
                     </div>
                     <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{swap.offers.length}}</p>
+                        <p class="text-muted mb-0">{{mySwap.swapOffers.length}}</p>
                     </div>
                 </div>
                 <hr>
@@ -64,92 +63,465 @@
                         <p class="mb-0">Swap Notes</p>
                     </div>
                     <div class="col-sm-9">
-                        <p class="text-muted mb-0">{{swap.additionalNotes}}</p>
+                        <p class="text-muted mb-0">{{mySwap.additionalNotes}}</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                        <p class="mb-4"><span class="text-primary font-italic me-1">status</span> Swap Offer
-                        </p>
-                        <p class="mb-1" style="font-size: .77rem;">Swap Start</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Swap Completion</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Swap Address</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Swap notes</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <br>
-                        <h6>Trade required</h6>
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Name</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 55%" aria-valuenow="55"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Address</p>
-                        <!-- <div class="progress rounded mb-2" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Completed Until</p>
-                        <!-- <div class="progress rounded mb-2" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 66%" aria-valuenow="66"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                        <p class="mb-4"><span class="text-primary font-italic me-1">status</span> Trade Offer
-                        </p>
 
-                        <p class="mb-1" style="font-size: .77rem;">Trade Start</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 80%" aria-valuenow="80"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Completion</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 72%" aria-valuenow="72"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Address</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Notes</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
-                        <p class="mt-4 mb-1" style="font-size: .77rem;">Trade Offered</p>
-                        <!-- <div class="progress rounded" style="height: 5px;">
-                            <div class="progress-bar" role="progressbar" style="width: 89%" aria-valuenow="89"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> -->
+        
+        <ng-container>
 
-                    </div>
+        </ng-container>
+
+
+
+
+
+        <!-- NOT OWNER | ADD SWAP OFFER PAGE -->
+        <div *ngIf="currentUser && showNotOwnerAdd" class="col-md-6 col-lg-6">
+            <p>You have not made any offers for this swap. Click below to make an offer.</p>
+            <div class="card col-md-12 col-lg-12">
+                <div class="card-body">
+                    <b>Swap Offer</b>
+                    <hr>
+
+                    <form #form="ngForm" (ngSubmit)="onSwapOfferSubmit(form, $event)">
+                        <div class="form-group">
+                            <label class="form-label">Swap Start Date</label>
+                            <input #swapStartDate="ngModel" ngModel type="date" class="form-control"
+                                name="swapStartDate" required [minlength]="10" [maxlength]="10">
+
+                            <div class="error" *ngIf="swapStartDate.touched && swapStartDate.errors?.['required']">
+                                Date is required.
+                            </div>
+                            <div class="error" *ngIf="swapStartDate.touched && swapStartDate.errors?.['minlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                            <div class="error" *ngIf="swapStartDate.touched && swapStartDate.errors?.['maxlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Swap End Date</label>
+                            <input #swapEndDate="ngModel" ngModel type="date" class="form-control" name="swapEndDate"
+                                required [minlength]="10" [maxlength]="10">
+
+                            <div class="error" *ngIf="swapEndDate.touched && swapEndDate.errors?.['required']">
+                                Date is required.
+                            </div>
+                            <div class="error" *ngIf="swapEndDate.touched && swapEndDate.errors?.['minlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                            <div class="error" *ngIf="swapEndDate.touched && swapEndDate.errors?.['maxlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputAddress">Address</label>
+                            <input name="address" #address="ngModel" ngModel type="text" class="form-control"
+                                placeholder="1234 Main St" required [minlength]="5" [maxlength]="32">
+                            <div class="error" *ngIf="address.touched && address.errors?.['required']">
+                                Address is required.
+                            </div>
+                            <div class="error" *ngIf="address.touched && address.errors?.['minlength']">
+                                Address minimum length is 5 characters.
+                            </div>
+                            <div class="error" *ngIf="address.touched && address.errors?.['maxlength']">
+                                Address minimum length is 32 characters.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAddress2">Address Second Line</label>
+                            <input name="address2" #address2="ngModel" ngModel type="text" class="form-control"
+                                placeholder="Apartment, studio, or floor">
+                        </div>
+                        <div class="col-12">
+                            <label>Additional Swap Notes</label>
+                            <textarea ngModel class="form-control" name="additionalNotes" rows="5" #noteInput="ngModel"
+                                required [minlength]="5" [maxLength]="500"></textarea>
+                            <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['required']">
+                                Swap note is required.
+                            </div>
+                            <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['minlength']">
+                                Swap note minimum length is 5 characters.
+                            </div>
+                            <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['maxlength']">
+                                Swap note minimum length is 500 characters.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Add images for requested trade.</label>
+                            <input (change)="onImgUpload($event)" accept=".jpg,.JPG,.jpeg,.png" class="form-control"
+                                type="file" name="swapOfferImages" multiple>
+                            <div *ngIf="uploading > 0" class="progress">
+                                <div class="progress-bar progress-bar-striped bg-warning" role="progressbar"
+                                    style="width: {{uploading}}%" attr.aria-valuenow="{{uploading}}" aria-valuemin="0"
+                                    aria-valuemax="100">Uploading {{uploading}}%</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="profile" class="checkbox-box">
+                            <h6><b>Please select requested trade</b></h6>
+                            <div *ngFor="let trade of profile.myTrades" class="form-check form-switch">
+                                <input name="{{trade}}" ngModel class="form-check-input" type="checkbox">
+                                <label class="form-check-label">{{trade}}</label>
+                            </div>
+                        </div>
+                        <hr>
+
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-primary">Make Swap Offer</button>
+
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
+
+
+
+        <!-- NOT OWNER | SWAP OFFERED PAGE -->
+        <ng-container *ngIf="showOwnerHome && currentUser || showNotOwnerAdd && showOwnerAcceptedWithAdd">
+            <div *ngFor="let offer of mySwap.swapOffers" class="col-md-6 col-lg-6 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">My Swap Offer</span>
+                    <div>
+                        <h6 *ngIf="offer.status.pending"><span class="badge bg-primary">Pending</span>
+                        </h6>
+                        <h6 *ngIf="offer.status.accepted"><span class="badge bg-success">Accepted</span>
+                        </h6>
+                        <h6 *ngIf="offer.status.declined"><span class="badge bg-danger">Declined</span>
+                        </h6>
+                    </div>
+                </h4>
+                <div *ngIf="showOwnerHome" class="mx-auto col-md-6 text-center">
+                    <button type="submit" class="btn btn-sm btn-danger text-center" (click)="onAcceptOffer()">Accept
+                        Offer</button>
+                    <button type="submit" class="btn btn-sm btn-secondary">Decline Offer</button>
+
+                </div>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swap Start Date</h6>
+                            <small class="text-muted">{{offer.swapStartDate}}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swap End Date</h6>
+                            <small class="text-muted">{{offer.swapEndDate}}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">My Trade Address</h6>
+                            <small class="text-muted">{{offer.address}}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">My Trade Requested</h6>
+                            <small *ngFor="let trade of offer.tradesRequested" class="text-muted">
+                                {{trade}}</small>
+                        </div>
+
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Additional Trade Notes</h6>
+                            <small class="text-muted">Additional information about requiested trade.</small>
+                            <hr>
+                            <span class="text-muted">{{offer.notes}}</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <form class="text-center card p-2">
+                            <div *ngIf="swapOfferImages" class="card mb-4 mb-lg-0">
+                                <img *ngFor="let image of swapOfferImages" src="{{image}}"
+                                    class="img-thumbnail rounded mx-auto">
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+
+
+        <!-- OWNER | TRADE OFFERED PAGE -->
+        <div *ngIf="showOwnerAcceptedWithAdd && mySwap" class="col-md-6 col-lg-6 order-md-last">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-primary">My Trade Offer</span>
+                <div>
+                    <h6 *ngIf="mySwap.status.pending"><span class="badge bg-primary">Pending</span>
+                    </h6>
+                    <h6 *ngIf="mySwap.status.accepted"><span class="badge bg-success">Accepted</span>
+                    </h6>
+                    <h6 *ngIf="mySwap.status.declined"><span class="badge bg-danger">Declined</span>
+                    </h6>
+                </div>
+            </h4>
+            <div *ngIf="" class="mx-auto col-md-6 text-center">
+                <button type="submit" class="btn btn-sm btn-danger text-center">Edit Offer</button>
+                <button type="submit" class="btn btn-sm btn-secondary">Delete Current Offer</button>
+            </div>
+            <div *ngIf="!showOwnerAcceptedWithAdd && showOwnerAcceptedWithPending" class="mx-auto col-md-6 text-center">
+                <button type="submit" class="btn btn-sm btn-secondary text-center">Edit Current Offer</button>
+                <button type="submit" class="btn btn-sm btn-danger text-center">Delete Offer</button>
+            </div>
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">Trade Start Date</h6>
+                        <small class="text-muted">{{mySwap.swapStartDate}}</small>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">Trade End Date</h6>
+                        <small class="text-muted">{{mySwap.swapEndDate}}</small>
+                    </div>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">Provided Trade/Trades</h6>
+                        <h6 *ngFor="let trade of mySwap.tradesRequested"><span
+                                class="badge bg-info">{{trade}}</span>
+                        </h6>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between lh-sm">
+                    <div>
+                        <h6 class="my-0">Additional Trade Notes</h6>
+                        <small class="text-muted">Additional information offered trade.</small>
+                        <hr>
+                        <span class="text-muted">{{mySwap.notes}}</span>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <form class="text-center card p-2">
+                        <div *ngIf="swapImages.length > 0" class="card mb-4 mb-lg-0">
+                            <img *ngFor="let image of swapImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
+                        </div>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <!-- OWNER | TRADE OFFER ADD PAGE -->
+        <div *ngIf="showOwnerAcceptedWithAdd" class="col-md-6 col-lg-6">
+            <p>Send trade offer for your accepted swap.</p>
+            <div class="card mb-4 mb-md-0">
+                <div class="card-body">
+                    <div>
+                        <h6 *ngIf="swap.swapOffers.length > 0"><span class="badge bg-primary">Pending</span>
+                        </h6>
+                        <h6 *ngIf="swap.swapOffers.length > 0"><span class="badge bg-success">Accepted</span>
+                        </h6>
+                        <h6 *ngIf="swap.swapOffers.length > 0"><span class="badge bg-danger">Declined</span>
+                        </h6>
+                        <b>Trade Offer</b>
+                    </div>
+                    <hr>
+
+                    <form #form="ngForm" (ngSubmit)="onTradeOfferSubmit(form, $event)">
+                        <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center"
+                            role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                            <div>
+                                {{error}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Trade Start Date</label>
+                            <input #tradeStartDate="ngModel" ngModel type="date" class="form-control"
+                                name="tradeStartDate" required [minlength]="10" [maxlength]="10">
+
+                            <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['required']">
+                                Date is required.
+                            </div>
+                            <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['minlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                            <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['maxlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Trade End Date</label>
+                            <input #tradeEndDate="ngModel" ngModel type="date" class="form-control" name="tradeEndDate"
+                                required [minlength]="10" [maxlength]="10">
+
+                            <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['required']">
+                                Date is required.
+                            </div>
+                            <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['minlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                            <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['maxlength']">
+                                Date minimum length is 11 characters.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputAddress">Address</label>
+                            <input name="tradeAddress" #tradeAddress="ngModel" ngModel type="text" class="form-control"
+                                placeholder="1234 Main St" required [minlength]="5" [maxlength]="32">
+                            <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['required']">
+                                Address is required.
+                            </div>
+                            <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['minlength']">
+                                Address minimum length is 5 characters.
+                            </div>
+                            <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['maxlength']">
+                                Address minimum length is 32 characters.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Address Second Line</label>
+                            <input name="tradeAddress2" #tradeAddress2="ngModel" ngModel type="text"
+                                class="form-control" placeholder="Apartment, studio, or floor">
+                        </div>
+                        <div class="col-12">
+                            <label>Additional Trade Notes</label>
+                            <textarea ngModel class="form-control" name="tradeNoteInput" rows="5"
+                                #tradeNoteInput="ngModel" required [minlength]="5" [maxLength]="500"></textarea>
+                            <div class="error" *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['required']">
+                                Swap note is required.
+                            </div>
+                            <div class="error" *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['minlength']">
+                                Swap note minimum length is 5 characters.
+                            </div>
+                            <div class="error" *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['maxlength']">
+                                Swap note minimum length is 500 characters.
+                            </div>
+                        </div>
+                        <hr>
+
+
+                        <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center"
+                            role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                                <use xlink:href="#exclamation-triangle-fill" />
+                            </svg>
+                            <div>
+                                {{error}}
+                            </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="profile" class="checkbox-box">
+                            <h6><b>Requested trade</b></h6>
+                            <p>Trades List</p>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-outline-primary">Send Trade Offer</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- NOT LOGGED IN PAGE -->
+        <div *ngIf="!currentUser" class="col-lg-12">
+            <div>
+                <h3 class="text-center">Register or Login to offer a trade!</h3>
+                <p class="lead">If you want to be able to offer a trade for this wap, please make sure to register or
+                    login.
+                </p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center mb-4 mb-lg-3">
+                    <button routerLink="/login" type="button"
+                        class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Login</button>
+                    <button routerLink="/register" type="button"
+                        class="btn btn-outline-success btn-lg px-4">Register</button>
+                </div>
+            </div>
+        </div>
+        <!-- LOGGED IN OWNER AND AVAILABLE ITEMS -->
+        <div *ngIf="showOwnerAcceptedWithAdd" class="col-lg-12">
+            <div *ngfor="let offer of filteredPendingOffers.length" class="col-md-12 col-lg-12 order-md-last">
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">My Trade Offer</span>
+                    <div>
+                        <h6 *ngIf="offer.status.pending"><span class="badge bg-primary">Pending</span>
+                        </h6>
+                        <h6 *ngIf="offer.status.accepted"><span class="badge bg-success">Accepted</span>
+                        </h6>
+                        <h6 *ngIf="offer.status.declined"><span class="badge bg-danger">Declined</span>
+                        </h6>
+                    </div>
+                </h4>
+
+                <!-- HIDE IF ACCEPTED -->
+                <!-- SHOW IF PENDING-->
+                <div class="mx-auto col-md-6 text-center">
+                    <button type="submit" class="btn btn-sm btn-success text-center">Accept Offer</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Decline Offer</button>
+                </div>
+                <ul class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swap Start Date</h6>
+                            <small class="text-muted">{{offer.swapStartDate}}</small>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Swap End Date</h6>
+                            <small class="text-muted">{{offer.swapEndDate}}</small>
+                        </div>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Requested Trade</h6>
+                            <h6 *ngFor="let trade of offer.tradesRequested"><span class="badge bg-info">{{trade}}</span>
+                            </h6>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="my-0">Additional Trade Notes</h6>
+                            <small class="text-muted">Additional information offered trade.</small>
+                            <hr>
+                            <span class="text-muted">{{offer.notes}}</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <form class="text-center card p-2">
+                            <div *ngIf="offer.swapOfferImages.length > 0" class="card mb-4 mb-lg-0">
+                                <img *ngFor="let image of offer.swapOfferImages" src="{{image}}"
+                                    class="img-thumbnail rounded mx-auto">
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LOGGED IN NOT OWNER -->
+        <ng-container *ngIf="swap">
+            <div>
+                <div *ngIf="currentUser && swap.swapOffers.length < 1" class="col-lg-12">
+                    <h3 class="text-center">There are no offers made yet, please check again later.</h3>
+
+                </div>
+            </div>
+        </ng-container>
+
+
+
+
     </div>
 </div>
+
+
+<!-- OWNER | SWAP ACCEPTED PAGE -->

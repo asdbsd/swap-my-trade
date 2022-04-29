@@ -48,6 +48,7 @@ export class AddComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.uploading = 0;
+    this.isUploading = false;
     this.profileSubscription.unsubscribe();
   }
 
@@ -72,7 +73,7 @@ export class AddComponent implements OnInit, OnDestroy {
       if(this.images.length) { this.swapImages = this.images.map((v: any) => v.name) }
       const swapRef = await this.swapService.addSwap(
         Object.assign({}, form.value, {
-          offers: [], status: { completed: false }, _ownerId: this.currentUser._id, swapImages: this.swapImages  })
+          swapOffers: [], tradeOffers: [], status: { completed: false },  _ownerId: this.currentUser._id, swapImages: this.swapImages  })
       );
 
       if (this.images.length) {
@@ -93,7 +94,6 @@ export class AddComponent implements OnInit, OnDestroy {
       }
 
       form.reset();
-      this.isUploading = false;
       this.router.navigate([`/swaps/${swapRef.path.split('/')[1]}`]);
     } catch (err) {
       this.isUploading = false;

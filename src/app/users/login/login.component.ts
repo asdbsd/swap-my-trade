@@ -28,13 +28,12 @@ export class LoginComponent implements OnDestroy {
   ) { }
 
   ngOnDestroy(): void {
-
   }
 
   async onFormSubmit(form: NgForm) {
     if (form.invalid) { return };
-
     let loginRef: any;
+
     try {
       loginRef = await this.authService.login({ email: form.value.email, password: form.value.password });
     } catch (err: any) {
@@ -47,14 +46,14 @@ export class LoginComponent implements OnDestroy {
 
     this.userService.getProfiles().pipe(
       switchMap((profiles: IProfile[]): Observable<IProfile> => {
-        profiles.filter((profile: IProfile) => profile.uid == loginRef._tokenResponse.localId);
-        return this.userService.getProfileById(profiles[0]._id);
+        const myProfile = profiles.filter((profile: IProfile) => profile.email === loginRef._tokenResponse.email);
+        return this.userService.getProfileById(myProfile[0]._id);
       })).subscribe({
         next: (currentUser: IProfile) => {
           this.store.dispatch(setCurrentUser({ currentUser }))
         },
         error: (err: any) => { err }
-      })
+      });
 
     this.router.navigate(['/swaps']);
   }

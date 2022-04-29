@@ -34,10 +34,15 @@ export class SwapService {
     return setDoc(bookDocRef, swap);
   }
   
-  // partialSwapUpdate(swap: ISwap, amount: number) {
-  //   const bookDocRef = doc(this.firestore, `books/${swap.id}`);
-  //   return updateDoc(bookDocRef, { price: amount });
-  // }
+  partialSwapUpdate(id: string, swapOffers: [{}], tradeOffers?: [{}], completed: boolean = false ) {
+    const swapDocRef = doc(this.firestore, `swaps/${id}`);
+    return updateDoc(swapDocRef, { ...swapOffers, ...tradeOffers, status: { completed } });
+  }
+  
+  updateSwapOffer(id: string, swapOffers: any[]) {
+    const swapDocRef = doc(this.firestore, `swaps/${id}`);
+    return updateDoc(swapDocRef, { ...swapOffers });
+  }
 
 }
 
