@@ -1,5 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subject, Subscription, switchMap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { Subscription, switchMap } from 'rxjs';
+import { currentUserSelector } from 'src/app/+store/selectors';
+import { IProfile } from 'src/app/shared/interfaces/profiles';
+
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { ITrade } from 'src/app/shared/interfaces/trades';
 import { TradeService } from 'src/app/trades/trade.service';
@@ -13,13 +17,18 @@ import { SwapService } from '../swap.service';
 export class SwapsComponent implements OnInit, OnDestroy {
   
   subscription!: Subscription;
+  currentUserSubscrption!: Subscription;
+
+
   swaps!: ISwap[]
   trades!: ITrade[]
+  currentUser!: IProfile | null;
 
 
   constructor(
     private swapsService: SwapService,
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private store: Store<any>
   ) { }
 
   ngOnInit(): void {
@@ -33,10 +42,22 @@ export class SwapsComponent implements OnInit, OnDestroy {
         this.swaps.map(swap => swap.trade == trade._id ? swap.trade = trade.name : null)
       })
     })
+
+
+    this.currentUserSubscrption = this.store.select(currentUserSelector).subscribe((user) => this.currentUser = user);
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.currentUserSubscrption.unsubscribe();
+    
+  }
+
+  deleteSwap(swap: ISwap) {
+    if (confirm('Are you sure to delete this record ?') == true) {
+      this.swapsService.deleteSwap(swap).then(() => 
+       console.log('delete successful'));
+    }
   }
 
 }

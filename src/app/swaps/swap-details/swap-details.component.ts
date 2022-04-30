@@ -260,7 +260,6 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
       }, 3500)
       return
     };
-    offeredTrades.unsubscribe();
 
     const combinedAddress = form.value.address + ', ' + form.value.address2;
 

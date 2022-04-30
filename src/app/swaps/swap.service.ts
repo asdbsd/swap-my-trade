@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Firestore, DocumentData, addDoc, DocumentReference, doc, docData, collectionData} from '@angular/fire/firestore';
-import { collection, setDoc, updateDoc, } from '@firebase/firestore';
+import { collection, deleteDoc, setDoc, updateDoc, } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { ISwap } from '../shared/interfaces/swaps';
 
@@ -44,6 +44,10 @@ export class SwapService {
     return updateDoc(swapDocRef, { swapOffers });
   }
 
+  deleteSwap(swap: ISwap) {
+    const swapDocRef = doc(this.firestore, `swaps/${swap._id}`);
+    return deleteDoc(swapDocRef);
+  }
 }
 
 
