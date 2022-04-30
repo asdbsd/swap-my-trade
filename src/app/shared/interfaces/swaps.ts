@@ -1,3 +1,4 @@
+import { AnyCatcher } from "rxjs/internal/AnyCatcher";
 
 export interface ISwap {
     _id: string;
@@ -15,7 +16,7 @@ export interface ISwap {
             };
             swapEndDate: string;
             swapStartDate: string;
-            tradesRequested: string[];
+            tradesRequested: any[];
             address: string;
             notes: string;
             swapOfferImages: any[];
@@ -29,13 +30,13 @@ export interface ISwap {
         };
         tradeStartDate: string;
         tradeEndDate: string;
+        tradesRequested: AnyCatcher[];
         address: string;
         notes: string;
-        tradeOfferImages: [string];
         user: string;
     }];
     status: {
         completed: Boolean;
     };
-    swapImages: [string];
+    swapImages: string[];
 }

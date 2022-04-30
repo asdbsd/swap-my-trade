@@ -36,12 +36,12 @@ export class SwapService {
   
   partialSwapUpdate(id: string, swapOffers: [{}], tradeOffers?: [{}], completed: boolean = false ) {
     const swapDocRef = doc(this.firestore, `swaps/${id}`);
-    return updateDoc(swapDocRef, { ...swapOffers, ...tradeOffers, status: { completed } });
+    return updateDoc(swapDocRef, { swapOffers, tradeOffers, status: { completed } });
   }
   
   updateSwapOffer(id: string, swapOffers: any[]) {
     const swapDocRef = doc(this.firestore, `swaps/${id}`);
-    return updateDoc(swapDocRef, { ...swapOffers });
+    return updateDoc(swapDocRef, { swapOffers });
   }
 
 }

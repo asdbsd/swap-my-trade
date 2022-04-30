@@ -18,10 +18,11 @@ export class ImageServiceService {
 
   async getSwapImages(id: string) {
     const currentSwapImagesRef = ref(this.fileStore, `/swaps/${id}`);
-    const currentImages: any[] = [];
+    const currentImages: string[] = [''];
     
     try {
       const imgList = (await listAll(currentSwapImagesRef)).items;
+
       for(let imgRef of imgList) {
         try {
           const downloadLink = await this.getImageUrl(imgRef);
@@ -34,7 +35,7 @@ export class ImageServiceService {
       return [];
     }
     
-    return currentImages;
+    return currentImages.filter(v => v !== '');
 
   }
  

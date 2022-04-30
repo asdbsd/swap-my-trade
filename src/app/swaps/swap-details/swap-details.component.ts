@@ -1,14 +1,13 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, switchMap } from 'rxjs';
+import { Observable, of, Subscription, switchMap } from 'rxjs';
 import { addError, clearError } from 'src/app/+store/actions';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
 import { ImageServiceService } from 'src/app/shared/image-service.service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
-import { ITrade } from 'src/app/shared/interfaces/trades';
 import { validations } from 'src/app/shared/utils';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
@@ -19,31 +18,32 @@ import { SwapService } from '../swap.service';
   templateUrl: './swap-details.component.html',
   styleUrls: ['./swap-details.component.scss']
 })
-export class SwapDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SwapDetailsComponent implements OnInit, OnDestroy {
+  appDataSubscription!: Subscription;
   currentSwapSubscription!: Subscription;
+  currentSwapOwnerSubscription!: Subscription;
 
+  // ALL
   swap!: ISwap;
-  profile!: IProfile;
+  swapImages!: string[];
+  currentSwapOwner!: IProfile;
 
-  formImages: any[] = [];
-  swapImages!: any[]
-  swapOfferImages!: any[];
+  currentSwapsImages!: [];
+  currentTradesImages!: [];
+
 
   // currentUser
-  profileSubscription!: Subscription;
-  currentUser!: IProfile | null;
+  currentUser: IProfile | null = null;
+  currentTradeOffer!: any;
+  currentSwapOffers: any []= [];
+  currentSwapOffer!: any;
 
-
-  //
-  mySwap!: any;
-  filteredPendingOffers: any;
-
+  formImages: any[] = [];
 
   uploading: number = 0;
   isUploading: boolean = false;
 
   error$: Observable<string> = this.store.select(currentErrorSelector);
-
 
   showOwnerHome: boolean = false;
   showOwnerAcceptedWithAdd: boolean = false;
@@ -67,20 +67,16 @@ export class SwapDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   ) { }
 
 
-
-  ngAfterViewInit(): void {
-
-  }
-
   ngOnInit(): void {
 
     this.loadContent()
-
   }
 
 
   ngOnDestroy(): void {
-    // this.currentSwapSubscription.unsubscribe()
+    this.appDataSubscription.unsubscribe();
+    this.currentSwapSubscription.unsubscribe()
+
   }
 
   async onSwapOfferSubmit(form: NgForm, $event: any) {
@@ -105,12 +101,12 @@ export class SwapDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     if (form.invalid || !formIsValid) { return }
-    let imageNames: string[] = [];
-    if (this.formImages.length) { imageNames = this.formImages.map(v => v.name) }
 
     try {
       const combinedAddress = form.value.address + ', ' + form.value.address2;
 
+      let imageNames: string[] = [];
+      if (this.formImages.length) { imageNames = this.formImages.map(v => v.name) }
       this.swap.swapOffers.push({
         status: {
           accepted: false,
@@ -155,7 +151,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.router.navigate([`/swaps/${this.swap._id}`]);
       $event.target.form.reset();
     } catch (err) {
-      this.isUploading = false;
+      this.isUploading = false
       this.uploading = 0;
       console.log(err);
       this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.' }));
@@ -168,84 +164,128 @@ export class SwapDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async loadContent() {
+    this.appDataSubscription = this.store.select(currentUserSelector).subscribe(profile => this.currentUser = profile);
+    this.currentSwapSubscription = this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']).pipe(
+      switchMap((swap: ISwap) => {
+        this.swap = swap;
+        this.imageStorage.getSwapImages(swap._id).then(images => this.swapImages = images);
+        this.currentTradeOffer = this.swap.tradeOffers[0];
 
-    this.store.select(currentUserSelector).subscribe(profile => this.currentUser = profile);
 
-    // Get current swap images
-    try {
-      this.swapImages = await this.imageStorage.getSwapImages(this.activatedRoute.snapshot.params['id']);
-    } catch (err) {
-      console.log(err);
-    }
+        if(this.currentUser) {
+          this.currentSwapOffer = this.swap.swapOffers.filter(offer => offer.user === this.currentUser?._id)[0];
+        }
 
-    this.currentSwapSubscription = this.swapService.getSwapById(this.activatedRoute.snapshot.params['id'])
-      .pipe(
-        // Get current swap
-        switchMap((swap: ISwap) => {
-          this.mySwap = swap;
-          return this.userService.getProfileById(swap._ownerId);
-        })
-      ).pipe(
-        switchMap((profile) => {
-          this.profile = profile;
-          return this.tradeService.getTrades()
-        })).subscribe((trades: ITrade[]) => {
-          for (let i = 0; i < trades.length; i++) {
-            if (trades[i]._id === this.mySwap.trade) {
-              this.mySwap.trade = trades[i].name
-            }
-            for (let y = 0; y < this.profile.myTrades.length; y++) {
-              if (trades[i]._id === this.profile.myTrades[y]) {
-                this.profile.myTrades[y] = trades[i].name
-              }
+        if (swap._ownerId === this.currentUser?._id) {
+          this.currentSwapOffers = this.swap.swapOffers;
+          this.currentTradeOffer = this.swap.tradeOffers.map(offer => offer.user === this.currentUser?._id)[0];
+        }
+
+
+        this.showNotOwnerAdd = this.swap._id !== this.currentUser?._id && this.swap.swapOffers.filter((offer) => offer.user === this.currentUser?._id).length < 1;
+
+        this.showNotOwnerPendingOrAccepted = swap._ownerId === this.currentUser?._id;
+
+        this.showNotOwnerAcceptedWithPending = this.currentTradeOffer && this.swap._ownerId !== this.currentUser?._id && this.currentTradeOffer.status.pending;
+
+        this.showNotOwnerCompletedWithAccepted = this.swap.swapOffers.filter((offer: any) => offer.user === this.currentUser?._id).length > 0
+          && this.swap.tradeOffers.length > 1 && this.swap.tradeOffers.filter((offer: any) => offer.status.accepted).length > 1 && this.swap._ownerId !== this.currentUser?._id;
+
+
+        this.showOwnerHome = (swap.swapOffers.filter((o: any) => o.status.pending)).length > 1 && swap._ownerId === this.currentUser?._id;
+        this.showOwnerAcceptedWithAdd = (this.swap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && this.currentSwapOffer._ownerId === this.currentUser?._id;
+        this.showOwnerAcceptedWithPending = (this.swap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && this.swap.tradeOffers.length > 0 && this.swap._ownerId === this.currentUser?._id;
+        this.showOwnerAcceptedWithAccepted = (this.swap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && (this.swap.tradeOffers.filter((o: any) => o.status.accepted)).length > 0 && this.swap._ownerId === this.currentUser?._id;
+
+        console.log('OWNER')
+        console.log(`showOwnerHome`, this.showOwnerHome)
+        console.log(`showOwnerAcceptedWithAdd`, this.showOwnerAcceptedWithAdd)
+        console.log(`showOwnerAcceptedWithPending`, this.showOwnerAcceptedWithPending)
+        console.log(`showOwnerAcceptedWithAccepted`, this.showOwnerAcceptedWithAccepted)
+
+        console.log('NOT OWNER')
+        console.log(`showNotOwnerAdd`, this.showOwnerHome)
+        console.log(`showNotOwnerPendingOrAccepted`, this.showOwnerAcceptedWithAdd)
+        console.log(`showNotOwnerAcceptedWithPending`, this.showOwnerAcceptedWithPending)
+        console.log(`showNotOwnerCompletedWithAccepted`, this.showOwnerAcceptedWithAccepted)
+
+        return this.userService.getProfileById(this.swap._ownerId)
+      }),
+      switchMap((profile) => {
+        this.currentSwapOwner = profile;
+        return this.tradeService.getTrades()
+      }),
+      switchMap((trades) => {
+        for (let i = 0; i < trades.length; i++) {
+          if (trades[i]._id === this.swap.trade) {
+            this.swap.trade = trades[i].name
+          }
+          for (let y = 0; y < this.currentSwapOwner.myTrades.length; y++) {
+            if (trades[i]._id === this.currentSwapOwner.myTrades[y]) {
+              this.currentSwapOwner.myTrades[y] = trades[i].name
             }
           }
-
-          this.imageStorage.getSwapImages(this.mySwap._id).then(images => this.swapOfferImages = images);
-
-          this.showNotOwnerAdd = this.mySwap.swapOffers.filter((offer :any) => offer.user === this.currentUser?._id).length < 1;
-
-          this.showNotOwnerPendingOrAccepted = this.mySwap.swapOffers.filter((offer :any) => offer.user === this.currentUser?._id).length > 0 
-            &&  this.mySwap.tradeOffers.length < 1;
-
-          this.showNotOwnerAcceptedWithPending = this.mySwap.swapOffers.filter((offer :any) => offer.user === this.currentUser?._id).length > 0 
-          && this.mySwap.tradeOffers.filter((offer: any) => offer.status.pending).length > 1 && this.mySwap.tradeOffers.length > 1 ;
-
-          this.showNotOwnerCompletedWithAccepted = this.mySwap.swapOffers.filter((offer :any) => offer.user === this.currentUser?._id).length > 0 
-          && this.mySwap.tradeOffers.length > 1 && this.mySwap.tradeOffers.filter((offer: any) => offer.status.accepted).length > 1 ;
-
-
-            (this.mySwap.swapOffers.filter((o: any) => o.status.pending)).length
-          this.showOwnerHome = (this.mySwap.swapOffers.filter((o: any) => o.status.pending)).length > 1;
-
-          this.showOwnerAcceptedWithAdd = (this.mySwap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && this.mySwap.tradeOffers.length < 1;
-          this.showOwnerAcceptedWithPending = (this.mySwap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && this.mySwap.tradeOffers.length > 0;
-          this.showOwnerAcceptedWithAccepted = (this.mySwap.swapOffers.filter((o: any) => o.status.accepted)).length > 0 && (this.mySwap.tradeOffers.filter((o: any) => o.status.accepted)).length > 0
-
-
-        });
+        }
+        return of(this.swap)
+      })).subscribe();
 
 
   }
+
 
   onAcceptOffer() {
     const getSwapSubscription = this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']).subscribe(
       (swap) => {
         const newSwapOffers = Object.assign([],
-          (swap.swapOffers.filter(offer => offer.user == this.currentUser?._id)),
-          { status: { pending: false, declined: false, accepted: true } })
-        this.swapService.partialSwapUpdate(this.activatedRoute.snapshot.params['id'], [newSwapOffers]).then(() => null)
+          (swap.swapOffers.filter(offer => offer.user == this.currentUser!._id)),
+          { status: { pending: false, declined: false, accepted: true } });
+        this.swapService.partialSwapUpdate(this.activatedRoute.snapshot.params['id'], [newSwapOffers]).then(() => null);
+
       }
     );
     getSwapSubscription.unsubscribe();
-    this.showOwnerHome = false;
-    this.showOwnerAcceptedWithPending = true;
   }
 
 
 
-  async onTradeOfferSubmit(form: NgForm, event: Event) {
-    console.log(event)
+  async onTradeSubmit(form: NgForm, event: Event) {
+    if (form.invalid) { return; }
+  
+    const offeredTrades = this.currentSwapOffer.tradesRequested
+
+    if (offeredTrades.length < 1) {
+      this.store.dispatch(addError({ error: 'At least one trade must be selected.' }));
+      setTimeout(() => {
+        this.store.dispatch(clearError());
+      }, 3500)
+      return
+    };
+    offeredTrades.unsubscribe();
+
+    const combinedAddress = form.value.address + ', ' + form.value.address2;
+
+    this.swap.tradeOffers.push({
+      status: {
+        accepted: false,
+        pending: true,
+        declined: false
+      },
+      tradeStartDate: form.value.tradeStartDate,
+      tradeEndDate: form.value.tradeEndDate,
+      tradesRequested: offeredTrades,
+      address: combinedAddress,
+      notes: form.value.additionalNotes,
+      user: this.currentUser!._id
+    });
+
+    await this.swapService.partialSwapUpdate(
+      this.swap._id,
+      this.swap.swapOffers,
+      this.swap.tradeOffers
+    );
+
+
+    this.router.navigate([`/swaps/${this.swap._id}`]);
   }
 
   async onImgUpload(event: any) {
