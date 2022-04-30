@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <ng-container *ngIf="currentUser && showOwnerAcceptedWithAdd" class="col-md-5">
+        <ng-container class="col-md-5">
             <div *ngFor="let offer of currentSwapOffers">
                 <h4 class="justify-content-between align-items-center mb-3">
                     <span class="text-primary">Received Swap Offer</span>
@@ -128,7 +128,7 @@
         </ng-container>
 
 
-        <ng-container *ngIf="currentUser && showOwnerAcceptedWithAdd" class="col-md-5">
+        <ng-container *ngIf="currentUser" class="col-md-5">
             <form #form="ngForm" (ngSubmit)="onTradeSubmit(form, $event)">
                 <span class="text-primary">Send offer for requested trade.</span>
                 <div class="form-group">
