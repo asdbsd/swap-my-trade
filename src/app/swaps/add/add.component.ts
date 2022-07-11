@@ -8,7 +8,7 @@ import { IAppState } from 'src/app/+store/reducers';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
 import { ImageServiceService } from 'src/app/shared/image-service.service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
-import { ITrade } from 'src/app/shared/interfaces/trades';
+import { ITrade } from 'src/app/shared/interfaces/trade';
 import { validations } from 'src/app/shared/utils';
 import { TradeService } from 'src/app/trades/trade.service';
 import { SwapService } from '../swap.service';

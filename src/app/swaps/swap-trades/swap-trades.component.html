@@ -1,0 +1,24 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col" sortable="name">Trade Start Date</th>
+            <th scope="col" sortable="area">Trade End Date</th>
+            <th scope="col" sortable="population">Trade User</th>
+            <th scope="col">STATUS</th>
+        </tr>
+    </thead>
+
+    <tbody *ngIf="tradeOffers">
+        <tr *ngFor="let tradeOffer of tradeOffers">
+            <!-- <td>
+                        <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="me-2"
+                            style="width: 20px">
+                        {{ country.name }}
+                    </td> -->
+            <td>{{ tradeOffer.tradeStartDate }}</td>
+            <td>{{ tradeOffer.tradeEndDate }}</td>
+            <td>{{ tradeOffer.user }}</td>
+            <td>{{ tradeOffer.status.pending }}</td>
+        </tr>
+    </tbody>
+</table>

@@ -5,7 +5,7 @@ import { currentUserSelector } from 'src/app/+store/selectors';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 
 import { ISwap } from 'src/app/shared/interfaces/swaps';
-import { ITrade } from 'src/app/shared/interfaces/trades';
+import { ITrade } from 'src/app/shared/interfaces/trade';
 import { TradeService } from 'src/app/trades/trade.service';
 import { SwapService } from '../swap.service';
 

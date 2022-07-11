@@ -1,4 +1,3 @@
-import { AnyCatcher } from "rxjs/internal/AnyCatcher";
 
 export interface ISwap {
     _id: string;
@@ -30,7 +29,7 @@ export interface ISwap {
         };
         tradeStartDate: string;
         tradeEndDate: string;
-        tradesRequested: AnyCatcher[];
+        tradesRequested: any[];
         address: string;
         notes: string;
         user: string;

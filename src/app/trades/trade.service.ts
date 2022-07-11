@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Firestore, addDoc, DocumentReference, DocumentData, collectionData, docData} from '@angular/fire/firestore';
 import { collection, doc} from '@firebase/firestore';
 import { Observable, Subscription } from 'rxjs';
-import { ITrade } from '../shared/interfaces/trades'; 
+import { ITrade } from '../shared/interfaces/trade'; 
 
 @Injectable({
   providedIn: 'root'

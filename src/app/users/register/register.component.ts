@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store'
-import { ITrade } from 'src/app/shared/interfaces/trades';
+import { ITrade } from 'src/app/shared/interfaces/trade';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from '../user.service';
 import { addError, clearError, setCurrentUser } from 'src/app/+store/actions';

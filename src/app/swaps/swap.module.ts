@@ -9,6 +9,8 @@ import { SwapService } from './swap.service';
 import { FormsModule } from '@angular/forms';
 import { TradeService } from '../trades/trade.service';
 import { UserService } from '../users/user.service';
+import { SwapTradesComponent } from './swap-trades/swap-trades.component';
+import { SwapOwnerComponent } from './swap-owner/swap-owner.component';
 
 
 
@@ -17,7 +19,9 @@ import { UserService } from '../users/user.service';
     SwapsComponent,
     MySwapsComponent,
     SwapDetailsComponent,
-    AddComponent
+    AddComponent,
+    SwapTradesComponent,
+    SwapOwnerComponent
   ],
   imports: [
     CommonModule,

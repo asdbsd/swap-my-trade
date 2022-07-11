@@ -1,0 +1,19 @@
+<div *ngIf="(currentSwapOwner$ | async) as swapOwner">
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <img src="{{swapOwner.profileImg}}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+            <h5 class="my-3">{{swapOwner.firstName}} {{swapOwner.lastName}}</h5>
+            <h5 *ngFor="let profileTrade of swapOwner.myTrades"><span class="badge bg-info">{{profileTrade}}</span>
+            </h5>
+        </div>
+        <div class="d-flex justify-content-center mb-2">
+            <button type="button" class="btn btn-primary">Follow</button>
+            <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+        </div>
+    </div>
+
+    <!-- <h5 class="text-center">Swap detail Images</h5>
+    <div *ngIf="swap.swapImages" class="card mb-4 mb-lg-0">
+        <img *ngFor="let image of swap.swapImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
+    </div> -->
+</div>

@@ -19,9 +19,10 @@ export class UserService {
   }
 
   getProfileById(id: string) {
-    const swapRef = doc(this.db, `profiles/${id}`);
-    return docData(swapRef, { idField: '_id' }) as Observable<IProfile>;
+    const profileRef = doc(this.db, `profiles/${id}`);
+    return docData(profileRef, { idField: '_id' }) as Observable<IProfile>;
   }
+
 
   getProfiles(): Observable<IProfile[]> {
     return collectionData(getCollectionReference(this.db, 'profiles'), { idField: '_id'}) as Observable<IProfile[]>;
