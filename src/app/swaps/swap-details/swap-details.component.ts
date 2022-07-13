@@ -21,7 +21,6 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   swapSubscription!: Subscription;
   currentSwapOwnerSubscription!: Subscription;
 
-  swap!: ISwap;
   swap$!: Observable<ISwap>;
   allTrades!: ITrade[]
 
@@ -55,10 +54,8 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     ).pipe(
       switchMap((result) => {
         const [ swap, trades ] = [...result];
-        const currentTrade: string = trades.filter(trade => trade._id === swap.trade).pop()?.name!;
-        swap.trade = currentTrade;
-        this.swap = swap;
-        return of(this.swap);
+        trades.forEach(trade => trade._id === swap.trade ? swap.trade = trade.name : null);
+        return of(swap);
       })
     );
   }
