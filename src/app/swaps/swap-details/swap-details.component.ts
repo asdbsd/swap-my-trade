@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription} from 'rxjs';
+import { forkJoin, map, mergeMap, Observable, of, Subscription, switchMap, zip } from 'rxjs';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
 import { ImageServiceService } from 'src/app/shared/image-service.service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
+import { ITrade } from 'src/app/shared/interfaces/trade';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
 import { SwapService } from '../swap.service';
@@ -17,12 +18,16 @@ import { SwapService } from '../swap.service';
 })
 export class SwapDetailsComponent implements OnInit, OnDestroy {
   appDataSubscription!: Subscription;
-  currentSwapSubscription!: Subscription;
+  swapSubscription!: Subscription;
   currentSwapOwnerSubscription!: Subscription;
 
+  swap!: ISwap;
+  swap$!: Observable<ISwap>;
+  allTrades!: ITrade[]
+
   // ALL
-  swap$: Observable<ISwap> = this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']);
-  currentUser$: Observable<IProfile|null> = this.store.select(currentUserSelector);
+
+  currentUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
 
 
   formImages: any[] = [];
@@ -44,13 +49,23 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-
+    this.swap$ = zip(
+      this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']),
+      this.tradeService.getTrades()
+    ).pipe(
+      switchMap((result) => {
+        const [ swap, trades ] = [...result];
+        const currentTrade: string = trades.filter(trade => trade._id === swap.trade).pop()?.name!;
+        swap.trade = currentTrade;
+        this.swap = swap;
+        return of(this.swap);
+      })
+    );
   }
 
 
   ngOnDestroy(): void {
-    // this.appDataSubscription.unsubscribe();
-    // this.currentSwapSubscription.unsubscribe()
+
 
   }
 
@@ -141,7 +156,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
   loadContent() {
     // this.appDataSubscription = this.store.select(currentUserSelector).subscribe(profile => this.currentUser = profile);
-    
+
     // this.userService.getProfileById(this.swap._ownerId).subscribe(profile => this.currentSwapOwner = profile);
 
     // .pipe(
@@ -199,7 +214,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
   // async onTradeSubmit(form: NgForm, event: Event) {
   //   if (form.invalid) { return; }
-  
+
   //   const offeredTrades = this.currentSwapOffer.tradesRequested
 
   //   if (offeredTrades.length < 1) {

@@ -1,6 +1,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th scope="col" sortable="name">Requested Trades</th>
             <th scope="col" sortable="name">Trade Start Date</th>
             <th scope="col" sortable="area">Trade End Date</th>
             <th scope="col" sortable="population">Trade User</th>
@@ -15,6 +16,7 @@
                             style="width: 20px">
                         {{ country.name }}
                     </td> -->
+            <td>{{ tradeOffer.tradesRequested }}</td>
             <td>{{ tradeOffer.tradeStartDate }}</td>
             <td>{{ tradeOffer.tradeEndDate }}</td>
             <td>{{ tradeOffer.user }}</td>
