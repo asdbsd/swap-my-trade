@@ -54,7 +54,9 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     this.isTradeOwnerSubscription = combineLatest([
       this.loggedInUser$,
       this.swap$
-    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : this.isTradeOwner = false ))
+    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : null ));
+
+    
     
   }
 

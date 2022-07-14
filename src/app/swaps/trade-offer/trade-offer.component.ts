@@ -11,6 +11,7 @@ export class TradeOfferComponent implements OnInit {
 
   @Input() tradeOffers!: ITrades[];
   @Input() loggedInUser!: IProfile;
+  tradeOfferImages!: string[];
 
   tradeOffer!: ITrades | undefined;
 
@@ -18,7 +19,9 @@ export class TradeOfferComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log('Offer: ', this.tradeOffers, '|', 'Id: ', this.loggedInUser._id);
-    this.tradeOffer = this.tradeOffers.filter(offer => offer.user === this.loggedInUser._id).pop();
+    if(this.tradeOffers.length > 0) {
+      this.tradeOffer = this.tradeOffers.filter(offer => offer.user === this.loggedInUser._id).pop();
+    }
     console.log(this.tradeOffer?.status);
   }
 

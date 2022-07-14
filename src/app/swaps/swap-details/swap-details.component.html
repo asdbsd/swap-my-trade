@@ -1,71 +1,69 @@
 <div class="row">
-    <div *ngIf="(swap$ | async) as swap" class="col-lg-4">
-        <app-swap-owner [swap]="swap" class="col-md-4"></app-swap-owner>
-    </div>
-
     <div *ngIf="(swap$ | async) as swap" class="col-lg-8">
         <div>
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-3">
-                            <p class="mb-0">Swap</p>
+                            <p class="mb-0"><b>Swap Title</b></p>
                         </div>
                         <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{swap.swapTitle}}</p>
+                            <p class="text-content mb-0">{{swap.swapTitle}}</p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-3">
-                            <p class="mb-0">Trade requested</p>
+                            <p class="mb-0"><b>Trade requested</b></p>
                         </div>
                         <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{swap.trade}}</p>
+                            <span class="badge bg-info">{{swap.trade}}</span>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-3">
-                            <p class="mb-0">Swap expiry</p>
+                            <p class="mb-0"><b>Swap expiry</b></p>
                         </div>
                         <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{swap.openUntil}}</p>
+                            <p class="text-content mb-0">{{swap.openUntil}}</p>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
                         <div class="col-sm-3">
-                            <p class="mb-0">Trade offers</p>
+                            <p class="mb-0"><b>Swap Notes</b></p>
                         </div>
                         <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{swap.tradeOffers.length}}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <p class="mb-0">Swap Notes</p>
-                        </div>
-                        <div class="col-sm-9">
-                            <p class="text-muted mb-0">{{swap.additionalNotes}}</p>
+                            <p class="text-content mb-0">{{swap.additionalNotes}}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <ng-container *ngIf="(loggedInUser$ | async) as loggedInUser">
-                <app-swap-trades *ngIf="loggedInUser._id === swap._ownerId" [tradeOffers]="swap.tradeOffers"></app-swap-trades>
-            </ng-container>
 
+                <app-swap-trades *ngIf="swap._ownerId === loggedInUser._id" [tradeOffers]="swap.tradeOffers">
+                </app-swap-trades>
+
+                <app-trade-offer *ngIf="isTradeOwner" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
+                </app-trade-offer>
+                <ng-container *ngIf="(swap$ | async) as swap">
+                    <app-offer-trade *ngIf="!isTradeOwner" [swapOwnerId]="swap._ownerId"></app-offer-trade>
+                </ng-container>
+
+            </ng-container>
             <app-login-or-register *ngIf="!(loggedInUser$ | async)"></app-login-or-register>
 
-            <ng-container *ngIf="(loggedInUser$ | async) as loggedInUser">
-                <app-trade-offer [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers"></app-trade-offer>
-            </ng-container>
 
         </div>
     </div>
+
+    <div *ngIf="(swap$ | async) as swap" class="col-lg-4">
+        <app-swap-owner [swap]="swap" class="col-md-4"></app-swap-owner>
+    </div>
+
+
 
 </div>
 
@@ -211,128 +209,7 @@
 
 
         <ng-container *ngIf="(showNotOwnerPendingOrAccepted || showOwnerAcceptedWithAdd)">
-            <div *ngIf="" class="col-md-6 col-lg-6">
-                <p>Send trade offer for your accepted swap.</p>
-                <div class="card mb-4 mb-md-0">
-                    <div class="card-body">
-                        <div>
-                            <h6 *ngIf="swap.swapOffers.length > 0"><span class="badge bg-primary">Pending</span>
-                            </h6>
-                            <h6 *ngIf="swap.swapOffers.length > 0"><span class="badge bg-success">Accepted</span>
-                            </h6>
-                            <b>Trade Offer</b>
-                        </div>
-                        <hr>
-
-                        <form #form="ngForm" (ngSubmit)="onTradeOfferSubmit(form, $event)">
-                            <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center"
-                                role="alert">
-                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
-                                    aria-label="Danger:">
-                                    <use xlink:href="#exclamation-triangle-fill" />
-                                </svg>
-                                <div>
-                                    {{error}}
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Trade Start Date</label>
-                                <input #tradeStartDate="ngModel" ngModel type="date" class="form-control"
-                                    name="tradeStartDate" required [minlength]="10" [maxlength]="10">
-
-                                <div class="error"
-                                    *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['required']">
-                                    Date is required.
-                                </div>
-                                <div class="error"
-                                    *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['minlength']">
-                                    Date minimum length is 11 characters.
-                                </div>
-                                <div class="error"
-                                    *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['maxlength']">
-                                    Date minimum length is 11 characters.
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Trade End Date</label>
-                                <input #tradeEndDate="ngModel" ngModel type="date" class="form-control"
-                                    name="tradeEndDate" required [minlength]="10" [maxlength]="10">
-
-                                <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['required']">
-                                    Date is required.
-                                </div>
-                                <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['minlength']">
-                                    Date minimum length is 11 characters.
-                                </div>
-                                <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['maxlength']">
-                                    Date minimum length is 11 characters.
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="inputAddress">Address</label>
-                                <input name="tradeAddress" #tradeAddress="ngModel" ngModel type="text"
-                                    class="form-control" placeholder="1234 Main St" required [minlength]="5"
-                                    [maxlength]="32">
-                                <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['required']">
-                                    Address is required.
-                                </div>
-                                <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['minlength']">
-                                    Address minimum length is 5 characters.
-                                </div>
-                                <div class="error" *ngIf="tradeAddress.touched && tradeAddress.errors?.['maxlength']">
-                                    Address minimum length is 32 characters.
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Address Second Line</label>
-                                <input name="tradeAddress2" #tradeAddress2="ngModel" ngModel type="text"
-                                    class="form-control" placeholder="Apartment, studio, or floor">
-                            </div>
-                            <div class="col-12">
-                                <label>Additional Trade Notes</label>
-                                <textarea ngModel class="form-control" name="tradeNoteInput" rows="5"
-                                    #tradeNoteInput="ngModel" required [minlength]="5" [maxLength]="500"></textarea>
-                                <div class="error"
-                                    *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['required']">
-                                    Swap note is required.
-                                </div>
-                                <div class="error"
-                                    *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['minlength']">
-                                    Swap note minimum length is 5 characters.
-                                </div>
-                                <div class="error"
-                                    *ngIf="tradeNoteInput.touched && tradeNoteInput.errors?.['maxlength']">
-                                    Swap note minimum length is 500 characters.
-                                </div>
-                            </div>
-                            <hr>
-
-
-                            <div *ngIf="(error$ | async) as error" class="alert alert-danger d-flex align-items-center"
-                                role="alert">
-                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
-                                    aria-label="Danger:">
-                                    <use xlink:href="#exclamation-triangle-fill" />
-                                </svg>
-                                <div>
-                                    {{error}}
-                                </div>
-                            </div>
-                            <div class="col-md-6" *ngIf="currentSwapOwner" class="checkbox-box">
-                                <h6><b>Requested trade</b></h6>
-                                <p>Trades List</p>
-                            </div>
-                            <hr>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-outline-primary">Send Trade Offer</button>
-                            </div>
-
-
-                        </form>
-                    </div>
-                </div>
-            </div>
+            
         </ng-container>
 
 
@@ -632,88 +509,7 @@
 
 
         <ng-container *ngIf="currentUser" class="col-md-5">
-            <form #form="ngForm" (ngSubmit)="onTradeSubmit(form, $event)">
-                <span class="text-primary">Send offer for requested trade.</span>
-                <div class="form-group">
-                    
-                    <input #tradeStartDate="ngModel" ngModel type="date" class="form-control" name="tradeStartDate"
-                        required [minlength]="10" [maxlength]="10">
-
-                    <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['required']">
-                        Date is required.
-                    </div>
-                    <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['minlength']">
-                        Date minimum length is 11 characters.
-                    </div>
-                    <div class="error" *ngIf="tradeStartDate.touched && tradeStartDate.errors?.['maxlength']">
-                        Date minimum length is 11 characters.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Swap End Date</label>
-                    <input #tradeEndDate="ngModel" ngModel type="date" class="form-control" name="tradeEndDate" required
-                        [minlength]="10" [maxlength]="10">
-
-                    <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['required']">
-                        Date is required.
-                    </div>
-                    <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['minlength']">
-                        Date minimum length is 11 characters.
-                    </div>
-                    <div class="error" *ngIf="tradeEndDate.touched && tradeEndDate.errors?.['maxlength']">
-                        Date minimum length is 11 characters.
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="inputAddress">Address</label>
-                    <input name="address" #address="ngModel" ngModel type="text" class="form-control"
-                        placeholder="1234 Main St" required [minlength]="5" [maxlength]="32">
-                    <div class="error" *ngIf="address.touched && address.errors?.['required']">
-                        Address is required.
-                    </div>
-                    <div class="error" *ngIf="address.touched && address.errors?.['minlength']">
-                        Address minimum length is 5 characters.
-                    </div>
-                    <div class="error" *ngIf="address.touched && address.errors?.['maxlength']">
-                        Address minimum length is 32 characters.
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="inputAddress2">Address Second Line</label>
-                    <input name="address2" #address2="ngModel" ngModel type="text" class="form-control"
-                        placeholder="Apartment, studio, or floor">
-                </div>
-                <div class="col-12">
-                    <label>Additional Swap Notes</label>
-                    <textarea ngModel class="form-control" name="additionalNotes" rows="5" #noteInput="ngModel" required
-                        [minlength]="5" [maxLength]="500"></textarea>
-                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['required']">
-                        Swap note is required.
-                    </div>
-                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['minlength']">
-                        Swap note minimum length is 5 characters.
-                    </div>
-                    <div class="error" *ngIf="noteInput.touched && noteInput.errors?.['maxlength']">
-                        Swap note minimum length is 500 characters.
-                    </div>
-                </div>
-
-                <div class="col-md-6" *ngIf="currentSwapOwner" class="checkbox-box">
-                    <h6><b>The trade/ trades you will be providing.</b></h6>
-
-                    <h5 *ngFor="let trade of currentSwapOwner.myTrades"><span class="badge bg-info">{{trade}}</span>
-                    </h5>
-
-                </div>
-                <hr>
-
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-outline-primary">Make Trade Offer</button>
-
-                </div>
-            </form>
+       
         </ng-container>
         
         
