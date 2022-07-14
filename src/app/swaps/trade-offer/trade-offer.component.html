@@ -1,0 +1,47 @@
+<div *ngIf="tradeOffer" class="col-md-12 order-md-last">
+    <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-primary">My Trade Offer</span>
+
+        <h6 *ngIf="tradeOffer.status.pending === true"><span class="badge bg-primary">Pending</span></h6>
+        <h6 *ngIf="tradeOffer.status.accepted === true"><span class="badge bg-primary">Accepted</span></h6>
+        <h6 *ngIf="tradeOffer.status.declined === true"><span class="badge bg-primary">Declined</span></h6>
+
+    </h4>
+
+
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+                <h6 class="my-0">Trade Start Date</h6>
+                <small class="text-muted">{{tradeOffer?.tradeStartDate}}</small>
+            </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+                <h6 class="my-0">Trade End Date</h6>
+                <small class="text-muted">{{tradeOffer?.tradeEndDate}}</small>
+            </div>
+        </li>
+
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+                <h6 class="my-0">Requested Trade/Trades</h6>
+                <h6 *ngFor="let trade of tradeOffer?.tradesRequested"><span class="badge bg-info">{{trade}}</span>
+                </h6>
+            </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+                <h6 class="my-0">Additional Trade Notes</h6>
+                <small class="text-muted">Additional information offered trade.</small>
+                <hr>
+                <span class="text-muted">{{tradeOffer?.notes}}</span>
+            </div>
+        </li>
+        <!-- <li *ngIf="swapOfferImages && swapOfferImages.length > 0" class="list-group-item">
+        
+            <img *ngFor="let image of swapOfferImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
+        
+    </li> -->
+    </ul>
+</div>

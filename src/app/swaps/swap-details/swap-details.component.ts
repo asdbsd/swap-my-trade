@@ -1,12 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { forkJoin, map, mergeMap, Observable, of, Subscription, switchMap, zip } from 'rxjs';
+import { combineLatest, map, Observable, of, Subscription, switchMap} from 'rxjs';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
-import { ImageServiceService } from 'src/app/shared/image-service.service';
+import { ImageService } from 'src/app/shared/image-service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
-import { ITrade } from 'src/app/shared/interfaces/trade';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
 import { SwapService } from '../swap.service';
@@ -17,18 +16,12 @@ import { SwapService } from '../swap.service';
   styleUrls: ['./swap-details.component.scss']
 })
 export class SwapDetailsComponent implements OnInit, OnDestroy {
-  appDataSubscription!: Subscription;
-  swapSubscription!: Subscription;
-  currentSwapOwnerSubscription!: Subscription;
+  
 
   swap$!: Observable<ISwap>;
-  allTrades!: ITrade[]
-
-  // ALL
-
-  currentUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
-
-
+  loggedInUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
+  isTradeOwner: boolean = false;
+  isTradeOwnerSubscription!: Subscription;
   formImages: any[] = [];
 
   uploading: number = 0;
@@ -40,7 +33,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     private swapService: SwapService,
     private tradeService: TradeService,
     private activatedRoute: ActivatedRoute,
-    private imageStorage: ImageServiceService,
+    private imageStorage: ImageService,
     private userService: UserService,
     private store: Store<any>,
     private router: Router
@@ -48,21 +41,26 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.swap$ = zip(
+    this.swap$ = combineLatest([
       this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']),
       this.tradeService.getTrades()
-    ).pipe(
-      switchMap((result) => {
-        const [ swap, trades ] = [...result];
+    ]).pipe(
+      switchMap(([swap, trades]) => {
         trades.forEach(trade => trade._id === swap.trade ? swap.trade = trade.name : null);
         return of(swap);
       })
     );
+
+    this.isTradeOwnerSubscription = combineLatest([
+      this.loggedInUser$,
+      this.swap$
+    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : this.isTradeOwner = false ))
+    
   }
 
 
   ngOnDestroy(): void {
-
+    this.isTradeOwnerSubscription.unsubscribe();
 
   }
 
@@ -149,49 +147,6 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   //   }
 
   // }
-
-
-  loadContent() {
-    // this.appDataSubscription = this.store.select(currentUserSelector).subscribe(profile => this.currentUser = profile);
-
-    // this.userService.getProfileById(this.swap._ownerId).subscribe(profile => this.currentSwapOwner = profile);
-
-    // .pipe(
-    //   switchMap((swap: ISwap) => {
-    //     this.swap = swap;
-    //     this.imageStorage.getSwapImages(swap._id).then(images => this.swap.swapImages = images);
-    //     this.currentTradeOffer = this.swap.tradeOffers[0];
-
-    //     if(this.currentUser) {
-    //       this.currentSwapOffer = this.swap.swapOffers.filter(offer => offer.user === this.currentUser?._id)[0];
-    //     }
-
-    //     if (swap._ownerId === this.currentUser?._id) {
-    //       this.currentSwapOffers = this.swap.swapOffers;
-    //       this.currentTradeOffer = this.swap.tradeOffers.map(offer => offer.user === this.currentUser?._id)[0];
-    //     }
-
-    //     return this.userService.getProfileById(this.swap._ownerId)
-    //   }),
-    //   switchMap((profile) => {
-    //     
-    //     return this.tradeService.getTrades()
-    //   }),
-    //   switchMap((trades) => {
-    //     for (let i = 0; i < trades.length; i++) {
-    //       if (trades[i]._id === this.swap.trade) {
-    //         this.swap.trade = trades[i].name
-    //       }
-    //       for (let y = 0; y < this.currentSwapOwner.myTrades.length; y++) {
-    //         if (trades[i]._id === this.currentSwapOwner.myTrades[y]) {
-    //           this.currentSwapOwner.myTrades[y] = trades[i].name
-    //         }
-    //       }
-    //     }
-    //     return of(this.swap)
-    //   })).subscribe();
-
-  }
 
 
   onAcceptOffer() {

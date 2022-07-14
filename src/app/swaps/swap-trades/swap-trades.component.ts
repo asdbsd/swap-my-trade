@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { ITrades } from 'src/app/shared/interfaces/trades';
+import { UserService } from 'src/app/users/user.service';
 
 @Component({
   selector: 'app-swap-trades',
@@ -10,14 +11,18 @@ import { ITrades } from 'src/app/shared/interfaces/trades';
 })
 export class SwapTradesComponent implements OnInit {
 
-  // @Input() swap$!: Observable<ISwap>
-  @Input() tradeOffers!: ITrades[]
+  @Input() tradeOffers!: ITrades[];
 
-  constructor() { }
+  constructor(
+    private userService: UserService
+  ) { }
 
   ngOnInit(): void {
-    // this.swap$.subscribe((trade) => console.log(trade));
-    console.log(this.tradeOffers);
+    this.tradeOffers.forEach(offer => {
+      this.userService.getProfileById(offer.user).subscribe(profile => {
+        offer.user = profile.firstName
+      });
+    });
   }
 
 }

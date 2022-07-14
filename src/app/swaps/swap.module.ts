@@ -11,6 +11,11 @@ import { TradeService } from '../trades/trade.service';
 import { UserService } from '../users/user.service';
 import { SwapTradesComponent } from './swap-trades/swap-trades.component';
 import { SwapOwnerComponent } from './swap-owner/swap-owner.component';
+import { SwapImagesComponent } from './swap-images/swap-images.component';
+import { LoginOrRegisterComponent } from './login-or-register/login-or-register.component';
+import { OfferTradeComponent } from './offer-trade/offer-trade.component';
+import { TradeOfferComponent } from './trade-offer/trade-offer.component';
+// import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -21,12 +26,16 @@ import { SwapOwnerComponent } from './swap-owner/swap-owner.component';
     SwapDetailsComponent,
     AddComponent,
     SwapTradesComponent,
-    SwapOwnerComponent
+    SwapOwnerComponent,
+    SwapImagesComponent,
+    LoginOrRegisterComponent,
+    OfferTradeComponent,
+    TradeOfferComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
-    SwapsRoutingModule,
+    SwapsRoutingModule
   ],
   providers: [
     SwapService,

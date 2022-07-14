@@ -12,8 +12,5 @@
         </div>
     </div>
 
-    <!-- <h5 class="text-center">Swap detail Images</h5>
-    <div *ngIf="swap.swapImages" class="card mb-4 mb-lg-0">
-        <img *ngFor="let image of swap.swapImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
-    </div> -->
+    <app-swap-images [swapId]="swap._id" [swapImages]="swap.swapImages"></app-swap-images>
 </div>

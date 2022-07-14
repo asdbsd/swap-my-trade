@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, of, switchMap, zip } from 'rxjs';
+import { combineLatest, map, Observable, of, switchMap, zip } from 'rxjs';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
+import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
 
@@ -11,8 +12,9 @@ import { UserService } from 'src/app/users/user.service';
 })
 export class SwapOwnerComponent implements OnInit {
 
-  @Input() ownerId!: string;
-  currentSwapOwner$!: Observable<IProfile>
+  @Input() swap!: ISwap;
+  
+  currentSwapOwner$!: Observable<IProfile>;
 
   constructor(
     private userService: UserService,
@@ -20,15 +22,13 @@ export class SwapOwnerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.currentSwapOwner$ = zip(
-      this.userService.getProfileById(this.ownerId),
+    this.currentSwapOwner$ = combineLatest([
+      this.userService.getProfileById(this.swap._ownerId),
       this.tradeService.getTrades()
-    ).pipe(
-      switchMap((result) => {
-        result[0].myTrades.forEach((trade, i) => trade === result[1][i]._id 
-                                                  ? result[0].myTrades[i] = result[1][i].name 
-                                                  : null);
-        return of(result[0]);
+    ]).pipe(
+      map(([profile, trades]) => {
+        profile.myTrades = trades.filter(trade => profile.myTrades.includes(trade._id)).map(trade => trade.name);
+        return profile;
       })
     )
   }

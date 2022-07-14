@@ -6,21 +6,6 @@ export interface ISwap {
     _ownerId: string;
     additionalNotes: string;
     openUntil: string;
-    swapOffers: [
-        {
-            status: {
-                accepted: boolean;
-                pending: boolean;
-                declined: boolean;
-            };
-            swapEndDate: string;
-            swapStartDate: string;
-            tradesRequested: any[];
-            address: string;
-            notes: string;
-            swapOfferImages: any[];
-            user: string;
-        }];
     tradeOffers: [{
         status: {
             accepted: boolean;

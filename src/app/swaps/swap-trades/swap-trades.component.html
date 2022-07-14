@@ -20,7 +20,9 @@
             <td>{{ tradeOffer.tradeStartDate }}</td>
             <td>{{ tradeOffer.tradeEndDate }}</td>
             <td>{{ tradeOffer.user }}</td>
-            <td>{{ tradeOffer.status.pending }}</td>
+            <td *ngIf="tradeOffer.status.pending === true">Pending</td>
+            <td *ngIf="tradeOffer.status.accepted === true">Accepted</td>
+            <td *ngIf="tradeOffer.status.declined=== true">Declined</td>
         </tr>
     </tbody>
 </table>

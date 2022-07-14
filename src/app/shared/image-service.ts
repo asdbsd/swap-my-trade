@@ -5,14 +5,14 @@ import { getDownloadURL, ref, uploadBytes } from '@firebase/storage';
 @Injectable({
   providedIn: 'root'
 })
-export class ImageServiceService {
+export class ImageService {
 
   constructor(
     private fileStore: Storage
   ) { }
 
   uploadImg(id: string, name: string, file: Blob) {
-    const swapsRef = ref(this.fileStore, `swaps/${id}/${name}`)
+    const swapsRef = ref(this.fileStore, `swaps/${id}/${name}`);
     return uploadBytes(swapsRef, file);
   }
 
@@ -26,7 +26,7 @@ export class ImageServiceService {
       for(let imgRef of imgList) {
         try {
           const downloadLink = await this.getImageUrl(imgRef);
-          currentImages.push(downloadLink)
+          currentImages.push(downloadLink);
         } catch (err) {
           return [];
         }

@@ -6,7 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { addError, clearError } from 'src/app/+store/actions';
 import { IAppState } from 'src/app/+store/reducers';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
-import { ImageServiceService } from 'src/app/shared/image-service.service';
+import { ImageService } from 'src/app/shared/image-service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ITrade } from 'src/app/shared/interfaces/trade';
 import { validations } from 'src/app/shared/utils';
@@ -37,7 +37,7 @@ export class AddComponent implements OnInit, OnDestroy {
     private swapService: SwapService,
     private router: Router,
     private store: Store<IAppState>,
-    private imageStorage: ImageServiceService
+    private imageStorage: ImageService
   ) { }
 
 
