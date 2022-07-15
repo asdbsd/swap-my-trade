@@ -70,10 +70,11 @@ export class AddComponent implements OnInit, OnDestroy {
     if (form.invalid || !formIsValid) { return }
 
     try {
-      if(this.images.length) { this.swapImages = this.images.map((v: any) => v.name) }
+      if (this.images.length) { this.swapImages = this.images.map((v: any) => v.name) }
       const swapRef = await this.swapService.addSwap(
         Object.assign({}, form.value, {
-          tradeOffers: [], status: { completed: false },  _ownerId: this.currentUser._id, swapImages: this.swapImages  })
+          tradeOffers: [], status: { completed: false }, _ownerId: this.currentUser._id, swapImages: this.swapImages
+        })
       );
 
       if (this.images.length) {
@@ -84,7 +85,7 @@ export class AddComponent implements OnInit, OnDestroy {
           } catch (err) {
             this.isUploading = false;
             this.uploading = 0;
-            this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.'}));
+            this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.' }));
             setTimeout(() => {
               this.store.dispatch(clearError());
             }, 3500)
@@ -98,12 +99,13 @@ export class AddComponent implements OnInit, OnDestroy {
     } catch (err) {
       this.isUploading = false;
       this.uploading = 0;
-      this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.'}));
+      this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.' }));
       setTimeout(() => {
         this.store.dispatch(clearError());
       }, 3500)
       return;
     }
+
 
   }
 

@@ -18,6 +18,7 @@ export interface ISwap {
         address: string;
         notes: string;
         user: string;
+        tradeImages: string[];
     }];
     status: {
         completed: Boolean;

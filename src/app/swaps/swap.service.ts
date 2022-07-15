@@ -3,6 +3,7 @@ import { Firestore, DocumentData, addDoc, DocumentReference, doc, docData, colle
 import { collection, deleteDoc, setDoc, updateDoc, } from '@firebase/firestore';
 import { Observable } from 'rxjs';
 import { ISwap } from '../shared/interfaces/swaps';
+import { ITrades } from '../shared/interfaces/trades';
 
 @Injectable({
   providedIn: 'root'
@@ -34,15 +35,12 @@ export class SwapService {
     return setDoc(bookDocRef, swap);
   }
   
-  partialSwapUpdate(id: string, swapOffers: [{}], tradeOffers?: [{}], completed: boolean = false ) {
-    const swapDocRef = doc(this.firestore, `swaps/${id}`);
-    return updateDoc(swapDocRef, { swapOffers, tradeOffers, status: { completed } });
+  partialSwapUpdate(id: string, tradeOffers: any[] ) {
+    const swapDocRef = doc(this.firestore, 'swaps', id);
+    console.log(tradeOffers);
+    return setDoc(swapDocRef, { tradeOffers }, { merge: true });
   }
   
-  updateSwapOffer(id: string, swapOffers: any[]) {
-    const swapDocRef = doc(this.firestore, `swaps/${id}`);
-    return updateDoc(swapDocRef, { swapOffers });
-  }
 
   deleteSwap(swap: ISwap) {
     const swapDocRef = doc(this.firestore, `swaps/${swap._id}`);

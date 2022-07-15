@@ -4,9 +4,11 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable } from 'rxjs';
 import { addError, clearError } from 'src/app/+store/actions';
 import { currentErrorSelector } from 'src/app/+store/selectors';
+import { ImageService } from 'src/app/shared/image-service';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
+import { SwapService } from '../swap.service';
 
 @Component({
   selector: 'app-offer-trade',
@@ -16,15 +18,22 @@ import { UserService } from 'src/app/users/user.service';
 export class OfferTradeComponent implements OnInit {
 
   @Input() swap!: ISwap;
-  swapOwnerTrades$!: Observable<string[]>;
-  currrentImagesToUpload!: any[];
+  @Input() offerUserId!: string;
 
+  currrentImagesToUpload!: any[];
+  isUploading: boolean = false;
+  uploading: number = 0;
+
+
+  swapOwnerTrades$!: Observable<string[]>;
   error$: Observable<string> = this.store.select(currentErrorSelector);
 
   constructor(
     private userService: UserService,
     private tradeService: TradeService,
-    private store: Store<any>
+    private store: Store<any>,
+    private imageStorage: ImageService,
+    private swapService: SwapService
   ) { }
 
   ngOnInit(): void {
@@ -40,12 +49,13 @@ export class OfferTradeComponent implements OnInit {
   }
 
   async onTradeSubmit(form: NgForm, event$: Event): Promise<void> {
+    this.isUploading = true;
     if (form.invalid) { return; }
 
-    const myTrades = [];
-    for (let [k, v] of Object.entries(form.value)) { v === true ? myTrades.push(k) : null; }
+    const selectedTrades = [];
+    for (let [k, v] of Object.entries(form.value)) { v === true ? selectedTrades.push(k) : null; }
 
-    if (myTrades.length < 1) {
+    if (selectedTrades.length < 1) {
       this.store.dispatch(addError({ error: 'At least one trade must be selected.' }));
       setTimeout(() => {
         this.store.dispatch(clearError());
@@ -53,40 +63,84 @@ export class OfferTradeComponent implements OnInit {
       return;
     };
 
-    const combinedAddress = form.value.address + ', ' + form.value.address2;
+    if (this.currrentImagesToUpload.length < 1) {
+      this.store.dispatch(addError({ error: 'At least one images for requested trade must be provided.' }));
+      setTimeout(() => {
+        this.store.dispatch(clearError());
+      }, 3500)
+      return;
+    };
 
-    // this.swap.tradeOffers.push({
-    //   status: {
-    //     accepted: false,
-    //     pending: true,
-    //     declined: false
-    //   },
-    //   tradeStartDate: form.value.tradeStartDate,
-    //   tradeEndDate: form.value.tradeEndDate,
-    //   tradesRequested: myTrades,
-    //   address: combinedAddress,
-    //   notes: form.value.additionalNotes,
-    //   user: this.currentUser!._id
-    // });
+    const combinedAddress = form.value.tradeAddress + ', ' + form.value.tradeAddress2;
 
-    // await this.swapService.partialSwapUpdate(
-    //   this.swap._id,
-    //   this.swap.swapOffers,
-    //   this.swap.tradeOffers
-    // );
+    try {
+      if (this.currrentImagesToUpload.length) {
+        console.log(this.currrentImagesToUpload)
+        for (let i = 0; i < this.currrentImagesToUpload.length; i++) {
 
+          this.uploading = Math.round((100 * (i + 1)) / this.currrentImagesToUpload.length);
 
-    // this.router.navigate([`/swaps/${this.swap._id}`]);
+          try {
+            console.log(i);
+            await this.imageStorage.uploadImg(this.swap._id, this.currrentImagesToUpload[i].name, this.currrentImagesToUpload[i]);
+          } catch (err) {
+            this.isUploading = false;
+            this.uploading = 0;
+            this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.' }));
+            console.log(err);
+            setTimeout(() => {
+              this.store.dispatch(clearError());
+            }, 3500)
+            return;
+          }
+        }
+      }
 
+      this.currrentImagesToUpload = this.currrentImagesToUpload.map(trade => trade.name)
+    } catch (err) {
+      this.isUploading = false;
+      this.uploading = 0;
+      this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.' }));
+      setTimeout(() => {
+        this.store.dispatch(clearError());
+      }, 3500)
+      return;
+    }
 
-    console.log(form);
-    console.log(event$);
+    
+    this.swap.tradeOffers.push({
+      status: {
+        accepted: false,
+        pending: true,
+        declined: false
+      },
+      tradeStartDate: form.value.tradeStartDate,
+      tradeEndDate: form.value.tradeEndDate,
+      tradesRequested: selectedTrades,
+      address: combinedAddress,
+      notes: form.value.tradeNoteInput,
+      user: this.offerUserId,
+      tradeImages: this.currrentImagesToUpload
+    });
+
+    
+    try {
+      const newTradeOffers = Object.assign([], this.swap.tradeOffers)
+      await this.swapService.partialSwapUpdate(this.swap._id, newTradeOffers);
+    } catch (err) {
+      console.log(err);
+      return;
+    }
+
+    this.isUploading = false;
+    this.uploading = 0;
+    form.reset();
+
   }
 
   async onImgUpload(event$: any): Promise<void> {
     const files: File[] = Array.from(event$.target.files);
     if (files.length) { this.currrentImagesToUpload = files };
-    console.log(this.currrentImagesToUpload);
     return;
   }
 

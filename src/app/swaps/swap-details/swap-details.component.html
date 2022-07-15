@@ -1,5 +1,8 @@
 <div class="row">
     <div *ngIf="(swap$ | async) as swap" class="col-lg-8">
+
+        <app-login-or-register *ngIf="!(loggedInUser$ | async)"></app-login-or-register>
+
         <div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -41,19 +44,22 @@
                 </div>
             </div>
 
+            <hr>
+
             <ng-container *ngIf="(loggedInUser$ | async) as loggedInUser">
 
-                <app-swap-trades *ngIf="swap._ownerId === loggedInUser._id" [tradeOffers]="swap.tradeOffers">
+                <app-swap-trades *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length"
+                    [tradeOffers]="swap.tradeOffers">
                 </app-swap-trades>
 
                 <app-trade-offer *ngIf="isTradeOwner" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
                 </app-trade-offer>
-                <ng-container *ngIf="(swap$ | async) as swap">
-                    <app-offer-trade *ngIf="!isTradeOwner" [swap]="swap"></app-offer-trade>
-                </ng-container>
+
+                <app-offer-trade *ngIf="!isTradeOwner && swap._ownerId !== loggedInUser._id"
+                    [offerUserId]="loggedInUser._id" [swap]="swap"></app-offer-trade>
+
 
             </ng-container>
-            <app-login-or-register *ngIf="!(loggedInUser$ | async)"></app-login-or-register>
 
 
         </div>
@@ -62,8 +68,6 @@
     <div *ngIf="(swap$ | async) as swap" class="col-lg-4">
         <app-swap-owner [swap]="swap" class="col-md-4"></app-swap-owner>
     </div>
-
-
 
 </div>
 

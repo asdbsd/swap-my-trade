@@ -111,13 +111,19 @@
                 <hr>
                 <div class="mb-3">
                     <label class="form-label text-content"><b>Add Images for requested trades</b></label>
-                    <input (change)="onImgUpload($event)" accept=".jpg,.JPG,.jpeg,.png" class="form-control" type="file" name="swapImages" multiple>
+                    <input (change)="onImgUpload($event)" accept=".jpg,.JPG,.jpeg,.png" class="form-control" type="file" name="tradeImages" multiple>
                 </div>
+
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" style="width: {{uploading}}%"
+                        attr.aria-valuenow="{{uploading}}" aria-valuemin="0" aria-valuemax="100">Uploading {{uploading}}%</div>
+                </div>
+
+                <br>
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-outline-primary">Send Trade Offer</button>
                 </div>
-
 
             </form>
         </div>
