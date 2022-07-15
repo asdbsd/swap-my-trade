@@ -18,11 +18,10 @@ import { SwapService } from '../swap.service';
 export class SwapDetailsComponent implements OnInit, OnDestroy {
   
 
-  swap!: ISwap;
+  swap$!: Observable<ISwap>;
   loggedInUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
   isTradeOwner: boolean = false;
   isTradeOwnerSubscription!: Subscription;
-  swapSubscription!: Subscription;
   formImages: any[] = [];
 
   uploading: number = 0;
@@ -42,14 +41,28 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.swapSubscription = this.tradeService.getTrades().subscribe(trades => trades.forEach(trade => trade._id === this.swap.trade ? this.swap.trade = trade.name : null));
-    this.isTradeOwnerSubscription = this.loggedInUser$.subscribe((loggedInUser) => this.swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : null ));
+    this.swap$ = combineLatest([
+      this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']),
+      this.tradeService.getTrades()
+    ]).pipe(
+      switchMap(([swap, trades]) => {
+        trades.forEach(trade => trade._id === swap.trade ? swap.trade = trade.name : null);
+        return of(swap);
+      })
+    );
+
+    this.isTradeOwnerSubscription = combineLatest([
+      this.loggedInUser$,
+      this.swap$
+    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : null ));
+
+    
+    
   }
 
 
   ngOnDestroy(): void {
     this.isTradeOwnerSubscription.unsubscribe();
-    this.swapSubscription.unsubscribe();
 
   }
 

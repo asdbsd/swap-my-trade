@@ -1,5 +1,5 @@
 <div class="row">
-    <div *ngIf="swap" class="col-lg-8">
+    <div *ngIf="(swap$ | async) as swap" class="col-lg-8">
         <div>
             <div class="card mb-4">
                 <div class="card-body">
@@ -48,7 +48,7 @@
 
                 <app-trade-offer *ngIf="isTradeOwner" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
                 </app-trade-offer>
-                <ng-container *ngIf="swap">
+                <ng-container *ngIf="(swap$ | async) as swap">
                     <app-offer-trade *ngIf="!isTradeOwner" [swap]="swap"></app-offer-trade>
                 </ng-container>
 
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div *ngIf="swap" class="col-lg-4">
+    <div *ngIf="(swap$ | async) as swap" class="col-lg-4">
         <app-swap-owner [swap]="swap" class="col-md-4"></app-swap-owner>
     </div>
 
