@@ -7,8 +7,7 @@ export interface IProfile {
     phoneNumber: string,
     profileImg: string,
     myTrades: string[],
-    completed: number,
-    mySwaps: string[]
+    completed: number
 }
 
 export interface IRegisterProfile {
@@ -19,6 +18,5 @@ export interface IRegisterProfile {
     phoneNumber: string,
     profileImg: string,
     myTrades: string[],
-    completed: number,
-    mySwaps: string[]
+    completed: number
 }

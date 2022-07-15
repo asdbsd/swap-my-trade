@@ -73,7 +73,7 @@ export class AddComponent implements OnInit, OnDestroy {
       if(this.images.length) { this.swapImages = this.images.map((v: any) => v.name) }
       const swapRef = await this.swapService.addSwap(
         Object.assign({}, form.value, {
-          swapOffers: [], tradeOffers: [], status: { completed: false },  _ownerId: this.currentUser._id, swapImages: this.swapImages  })
+          tradeOffers: [], status: { completed: false },  _ownerId: this.currentUser._id, swapImages: this.swapImages  })
       );
 
       if (this.images.length) {
