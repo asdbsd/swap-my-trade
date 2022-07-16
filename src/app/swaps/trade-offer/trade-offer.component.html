@@ -37,10 +37,7 @@
                 <span class="text-muted">{{tradeOffer?.notes}}</span>
             </div>
         </li>
-        <!-- <li *ngIf="swapOfferImages && swapOfferImages.length > 0" class="list-group-item">
-        
-            <img *ngFor="let image of swapOfferImages" src="{{image}}" class="img-thumbnail rounded mx-auto">
-        
-    </li> -->
+
+        <app-swap-images [tradeImages]="tradeOffer.tradeImages"></app-swap-images>
     </ul>
 </div>

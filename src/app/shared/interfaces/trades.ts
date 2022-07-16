@@ -7,6 +7,7 @@ export interface ITrades {
     tradeStartDate: string;
     tradeEndDate: string;
     tradesRequested: any[];
+    tradeImages: string[];
     address: string;
     notes: string;
     user: string;

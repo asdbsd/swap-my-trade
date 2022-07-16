@@ -11,13 +11,22 @@ export class ImageService {
     private fileStore: Storage
   ) { }
 
-  uploadImg(id: string, name: string, file: Blob) {
+  uploadSwapsImg(id: string, name: string, file: Blob) {
     const swapsRef = ref(this.fileStore, `swaps/${id}/${name}`);
     return uploadBytes(swapsRef, file);
   }
 
-  async getSwapImages(id: string) {
+  uploadtradesImg(id: string, name: string, user: string, file: Blob) {
+    const swapsRef = ref(this.fileStore, `swaps/${id}/trades/${user}/${name}`);
+    return uploadBytes(swapsRef, file);
+  }
+
+  async getSwapImages(id: string, name: string = '') {
     const currentSwapImagesRef = ref(this.fileStore, `/swaps/${id}`);
+
+    if(name) {
+      const currentSwapImagesRef = ref(this.fileStore, `/swaps/${id}`);
+    }
     const currentImages: string[] = [''];
     
     try {

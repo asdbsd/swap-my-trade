@@ -3,11 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, of, Subscription, switchMap} from 'rxjs';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
-import { ImageService } from 'src/app/shared/image-service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { TradeService } from 'src/app/trades/trade.service';
-import { UserService } from 'src/app/users/user.service';
 import { SwapService } from '../swap.service';
 
 @Component({
@@ -33,10 +31,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     private swapService: SwapService,
     private tradeService: TradeService,
     private activatedRoute: ActivatedRoute,
-    private imageStorage: ImageService,
-    private userService: UserService,
     private store: Store<any>,
-    private router: Router
   ) { }
 
 

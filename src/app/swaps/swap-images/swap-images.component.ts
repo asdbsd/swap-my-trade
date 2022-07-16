@@ -12,12 +12,22 @@ export class SwapImagesComponent implements OnInit {
     private imageService: ImageService
   ) { }
 
-  @Input() swapImages!: any[];
-  images!: string[];
   @Input() swapId!: string;
+  @Input() swapImages!: any[];
+  @Input() tradeImages!: any[];
+
+  swapImagesLinks!: string[];
+  tradeImagesLinks: string[] = [];
 
   ngOnInit(): void {
-    this.imageService.getSwapImages(this.swapId).then(images => this.images = images);
+    if(this.swapImages.length) {
+      this.imageService.getSwapImages(this.swapId).then(links => this.swapImagesLinks = links);
+    }
+
+    // if(this.tradeImages.length) {
+    //   this.tradeImages.map(image => this.imageService.getSwapImages(this.swapId, ).then(link => this.tradeImagesLinks.push(link)))
+    //   ;
+    // }
   }
 
 }

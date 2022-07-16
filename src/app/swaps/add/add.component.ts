@@ -81,7 +81,7 @@ export class AddComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.images.length; i++) {
           this.uploading = Math.round((100 * i) / this.images.length);
           try {
-            await this.imageStorage.uploadImg(swapRef.id, this.images[i].name, this.images[i]);
+            await this.imageStorage.uploadSwapsImg(swapRef.id, this.images[i].name, this.images[i]);
           } catch (err) {
             this.isUploading = false;
             this.uploading = 0;

@@ -82,7 +82,9 @@ export class OfferTradeComponent implements OnInit {
 
           try {
             console.log(i);
-            await this.imageStorage.uploadImg(this.swap._id, this.currrentImagesToUpload[i].name, this.currrentImagesToUpload[i]);
+
+
+            await this.imageStorage.uploadtradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUserId, this.currrentImagesToUpload[i]);
           } catch (err) {
             this.isUploading = false;
             this.uploading = 0;
@@ -96,7 +98,7 @@ export class OfferTradeComponent implements OnInit {
         }
       }
 
-      this.currrentImagesToUpload = this.currrentImagesToUpload.map(trade => trade.name)
+      this.currrentImagesToUpload = this.currrentImagesToUpload.map(image => image.name)
     } catch (err) {
       this.isUploading = false;
       this.uploading = 0;
@@ -125,8 +127,7 @@ export class OfferTradeComponent implements OnInit {
 
     
     try {
-      const newTradeOffers = Object.assign([], this.swap.tradeOffers)
-      await this.swapService.partialSwapUpdate(this.swap._id, newTradeOffers);
+      await this.swapService.partialSwapUpdate(this.swap._id, this.swap.tradeOffers);
     } catch (err) {
       console.log(err);
       return;
