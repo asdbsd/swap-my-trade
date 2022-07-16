@@ -81,15 +81,11 @@ export class OfferTradeComponent implements OnInit {
           this.uploading = Math.round((100 * (i + 1)) / this.currrentImagesToUpload.length);
 
           try {
-            console.log(i);
-
-
-            await this.imageStorage.uploadtradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUserId, this.currrentImagesToUpload[i]);
+            await this.imageStorage.uploadTradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUserId, this.currrentImagesToUpload[i]);
           } catch (err) {
             this.isUploading = false;
             this.uploading = 0;
             this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.' }));
-            console.log(err);
             setTimeout(() => {
               this.store.dispatch(clearError());
             }, 3500)

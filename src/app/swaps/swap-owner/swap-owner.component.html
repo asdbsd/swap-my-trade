@@ -11,6 +11,8 @@
             <button type="button" class="btn btn-outline-primary ms-1">Message</button>
         </div>
     </div>
-
-    <app-swap-images [swapId]="swap._id" [swapImages]="swap.swapImages"></app-swap-images>
+    <h5 class="text-center">Swap Images</h5>
+    <div class="text-center">
+        <app-swap-images *ngIf="swap" [imagesLinks]="swapImagesLinks"></app-swap-images>
+    </div>
 </div>

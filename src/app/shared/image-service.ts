@@ -16,40 +16,44 @@ export class ImageService {
     return uploadBytes(swapsRef, file);
   }
 
-  uploadtradesImg(id: string, name: string, user: string, file: Blob) {
+  uploadTradesImg(id: string, name: string, user: string, file: Blob) {
     const swapsRef = ref(this.fileStore, `swaps/${id}/trades/${user}/${name}`);
     return uploadBytes(swapsRef, file);
   }
 
-  async getSwapImages(id: string, name: string = '') {
+  getTradeImages(id: string, userId: string) {
+    const currentTradeImagesRef = ref(this.fileStore, `/swaps/${id}/trades/${userId}`);
+    return this.getImagesLinks(currentTradeImagesRef);
+  }
+
+  getSwapImages(id: string) {
     const currentSwapImagesRef = ref(this.fileStore, `/swaps/${id}`);
+    return this.getImagesLinks(currentSwapImagesRef);
+  }
+ 
+  getImageUrl(imageRef: StorageReference) {
+    return getDownloadURL(imageRef);
+  }
 
-    if(name) {
-      const currentSwapImagesRef = ref(this.fileStore, `/swaps/${id}`);
-    }
-    const currentImages: string[] = [''];
-    
+  async getImagesLinks(documentRef: StorageReference) {
+    const currentImagesLinks: string[] = []
+
     try {
-      const imgList = (await listAll(currentSwapImagesRef)).items;
+      const imagesReferences = (await listAll(documentRef)).items;
 
-      for(let imgRef of imgList) {
+      for(let imgRef of imagesReferences) {
         try {
           const downloadLink = await this.getImageUrl(imgRef);
-          currentImages.push(downloadLink);
+          currentImagesLinks.push(downloadLink);
         } catch (err) {
           return [];
         }
       }
     } catch (err) {
       return [];
-    }
-    
-    return currentImages.filter(v => v !== '');
+    }    
 
-  }
- 
-  getImageUrl(imageRef: StorageReference) {
-    return getDownloadURL(imageRef);
+    return currentImagesLinks;
   }
 
 

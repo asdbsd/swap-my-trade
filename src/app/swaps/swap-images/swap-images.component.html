@@ -1,4 +1,3 @@
-<h5 class="text-center">Swap detail Images</h5>
-<div *ngIf="swapImagesLinks" class="card mb-4 mb-lg-0">
-    <img *ngFor="let link of swapImagesLinks" src="{{link}}" class="img-thumbnail rounded mx-auto">
-</div>
+<ng-container *ngIf="imagesLinks" class="card mb-lg-0">
+    <img *ngFor="let link of imagesLinks" src="{{link}}" class="img-thumbnail rounded">
+</ng-container>

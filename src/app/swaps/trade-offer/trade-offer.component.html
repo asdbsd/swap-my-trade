@@ -37,7 +37,12 @@
                 <span class="text-muted">{{tradeOffer?.notes}}</span>
             </div>
         </li>
-
-        <app-swap-images [tradeImages]="tradeOffer.tradeImages"></app-swap-images>
     </ul>
+
+    <h5 class="text-center">Trade Offer Images</h5>
+
+    <div class="text-center">
+        <app-swap-images [imagesLinks]="tradeImages"></app-swap-images>
+    </div>
+
 </div>

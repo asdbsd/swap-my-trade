@@ -51,9 +51,9 @@
                 <app-swap-trades *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length"
                     [tradeOffers]="swap.tradeOffers">
                 </app-swap-trades>
-
-                <app-trade-offer *ngIf="isTradeOwner" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
-                </app-trade-offer>
+                <div *ngIf="isTradeOwner" class="tradeOffer rounded"><app-trade-offer [swapId]="swap._id" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
+                </app-trade-offer></div>
+                
 
                 <app-offer-trade *ngIf="!isTradeOwner && swap._ownerId !== loggedInUser._id"
                     [offerUserId]="loggedInUser._id" [swap]="swap"></app-offer-trade>
@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <div *ngIf="(swap$ | async) as swap" class="col-lg-4">
+    <div *ngIf="(swap$ | async) as swap" class="col-lg-4 rounded">
         <app-swap-owner [swap]="swap" class="col-md-4"></app-swap-owner>
     </div>
 
