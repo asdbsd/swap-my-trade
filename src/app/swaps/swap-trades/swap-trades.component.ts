@@ -25,7 +25,7 @@ export class SwapTradesComponent implements OnInit {
   
   onTradeOfferSelected(event: any): void {
     if(event.target!.tagName === 'TD' && event.target.parentElement.tagName === 'TR') {
-      this.isTradeSelected.emit(event.target.parentElement.id);
+      this.isTradeSelected.emit(event);
     }
   }
 
