@@ -71,7 +71,8 @@ export class RegisterComponent implements OnInit {
         phoneNumber: '',
         profileImg: '/assets/swap-my-trade-profile.png',
         myTrades: myTrades,
-        completed: 0
+        myTradeOffers: [],
+        mySwapRequests: []
       }
     )
 

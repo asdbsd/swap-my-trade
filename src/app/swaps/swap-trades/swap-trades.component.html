@@ -17,8 +17,8 @@
                         {{ country.name }}
                     </td> -->
             <td>{{ tradeOffer.tradesRequested }}</td>
-            <td>{{ tradeOffer.tradeStartDate }}</td>
-            <td>{{ tradeOffer.tradeEndDate }}</td>
+            <td>{{ tradeOffer.startByDate }}</td>
+            <td>{{ tradeOffer.endByDate }}</td>
             <td>{{ tradeOffer.user }}</td>
             <td *ngIf="tradeOffer.status.pending === true">Pending</td>
             <td *ngIf="tradeOffer.status.accepted === true">Accepted</td>

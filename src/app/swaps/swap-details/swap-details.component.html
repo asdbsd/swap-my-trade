@@ -51,12 +51,13 @@
                 <app-swap-trades *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length"
                     [tradeOffers]="swap.tradeOffers">
                 </app-swap-trades>
-                <div *ngIf="isTradeOwner" class="tradeOffer rounded"><app-trade-offer [swapId]="swap._id" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
+
+                <div *ngIf="isTradeOwner && loggedInUser._id !== swap._ownerId" class="tradeOffer rounded"><app-trade-offer [swapId]="swap._id" [loggedInUser]="loggedInUser" [tradeOffers]="swap.tradeOffers">
                 </app-trade-offer></div>
                 
 
                 <app-offer-trade *ngIf="!isTradeOwner && swap._ownerId !== loggedInUser._id"
-                    [offerUserId]="loggedInUser._id" [swap]="swap"></app-offer-trade>
+                    [offerUser]="loggedInUser" [swap]="swap"></app-offer-trade>
 
 
             </ng-container>

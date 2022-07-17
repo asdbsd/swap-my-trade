@@ -12,12 +12,13 @@ export interface ISwap {
             pending: boolean;
             declined: boolean;
         };
-        tradeStartDate: string;
-        tradeEndDate: string;
+        startByDate: string;
+        endByDate: string;
         tradesRequested: any[];
         address: string;
         notes: string;
         user: string;
+        swapId: string;
         tradeImages: string[];
     }];
     status: {

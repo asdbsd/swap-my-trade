@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subscription } from 'rxjs';
 import { addError, clearError } from 'src/app/+store/actions';
 import { currentErrorSelector } from 'src/app/+store/selectors';
 import { ImageService } from 'src/app/shared/image-service';
+import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { TradeService } from 'src/app/trades/trade.service';
 import { UserService } from 'src/app/users/user.service';
@@ -18,7 +19,7 @@ import { SwapService } from '../swap.service';
 export class OfferTradeComponent implements OnInit {
 
   @Input() swap!: ISwap;
-  @Input() offerUserId!: string;
+  @Input() offerUser!: IProfile;
 
   currrentImagesToUpload!: any[];
   isUploading: boolean = false;
@@ -32,7 +33,7 @@ export class OfferTradeComponent implements OnInit {
     private userService: UserService,
     private tradeService: TradeService,
     private store: Store<any>,
-    private imageStorage: ImageService,
+    private imageService: ImageService,
     private swapService: SwapService
   ) { }
 
@@ -46,7 +47,9 @@ export class OfferTradeComponent implements OnInit {
         return profile.myTrades;
       })
     )
+
   }
+
 
   async onTradeSubmit(form: NgForm, event$: Event): Promise<void> {
     this.isUploading = true;
@@ -75,13 +78,13 @@ export class OfferTradeComponent implements OnInit {
 
     try {
       if (this.currrentImagesToUpload.length) {
-        console.log(this.currrentImagesToUpload)
+        
         for (let i = 0; i < this.currrentImagesToUpload.length; i++) {
 
           this.uploading = Math.round((100 * (i + 1)) / this.currrentImagesToUpload.length);
 
           try {
-            await this.imageStorage.uploadTradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUserId, this.currrentImagesToUpload[i]);
+            await this.imageService.uploadTradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUser._id, this.currrentImagesToUpload[i]);
           } catch (err) {
             this.isUploading = false;
             this.uploading = 0;
@@ -105,27 +108,28 @@ export class OfferTradeComponent implements OnInit {
       return;
     }
 
-    
-    this.swap.tradeOffers.push({
+    const newTradeOffer = {
       status: {
         accepted: false,
         pending: true,
         declined: false
       },
-      tradeStartDate: form.value.tradeStartDate,
-      tradeEndDate: form.value.tradeEndDate,
+      startByDate: form.value.tradeStartDate,
+      endByDate: form.value.tradeEndDate,
       tradesRequested: selectedTrades,
       address: combinedAddress,
       notes: form.value.tradeNoteInput,
-      user: this.offerUserId,
+      user: this.offerUser._id,
+      swapId: this.swap._id,
       tradeImages: this.currrentImagesToUpload
-    });
-
+    }
     
+    this.swap.tradeOffers.push(newTradeOffer);
+
     try {
-      await this.swapService.partialSwapUpdate(this.swap._id, this.swap.tradeOffers);
+      await this.swapService.partialSwapUpdate(this.swap._id, this.swap);
+      await this.userService.partialProfileUpdate(this.offerUser._id, { myTradeOffers: Object.assign([], this.offerUser.myTradeOffers, [newTradeOffer])});
     } catch (err) {
-      console.log(err);
       return;
     }
 
