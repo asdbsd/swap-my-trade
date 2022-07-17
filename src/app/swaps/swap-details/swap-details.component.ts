@@ -25,6 +25,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   
   tradeOfferToDisplay$!: Observable<ITrades>;
   tradeImages!: string[];
+  previousTradeTargetId!: string;
   
   isTradeSelected: boolean = false;
   isTradeOwner: boolean = false;
@@ -81,7 +82,14 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   }
 
   setTradeSelected(targetId: any) {
-    this.isTradeSelected = true;
+    if(targetId === this.previousTradeTargetId) {
+      this.isTradeSelected = !this.isTradeSelected;
+    } else {
+      this.isTradeSelected = true;
+    }
+    
+    this.previousTradeTargetId = targetId;
+
     this.tradeOfferToDisplay$ = this.swap$.pipe(
       switchMap((swap) => of(swap.tradeOffers.filter(offer => offer.user._id === targetId).pop()!))
     )

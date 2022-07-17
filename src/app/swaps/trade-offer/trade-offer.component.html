@@ -1,4 +1,6 @@
 <div *ngIf="tradeOffer" class="col-md-12 order-md-last">
+    
+
     <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-primary">My Trade Offer</span>
 
@@ -7,6 +9,13 @@
         <h6 *ngIf="tradeOffer.status.declined === true"><span class="badge bg-primary">Declined</span></h6>
 
     </h4>
+
+    <div class="text-center mb-3">
+        <div class="btn-group btn-group-md" role="group" aria-label="action-buttons">
+            <button type="button" class="btn btn-success">Accept</button>
+            <button type="button" class="btn btn-danger">Decline</button>
+        </div>
+    </div>
 
     <ul class="list-group mb-3">
         <li class="list-group-item d-flex justify-content-between lh-sm">

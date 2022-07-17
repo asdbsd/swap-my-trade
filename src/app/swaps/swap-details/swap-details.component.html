@@ -49,8 +49,8 @@
             <ng-container *ngIf="(loggedInUser$ | async) as loggedInUser">
 
                 <app-swap-trades (isTradeSelected)="setTradeSelected($event)"
-                    *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length && !isTradeSelected"
-                    [tradeOffers]="swap.tradeOffers">
+                    *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length"
+                    [tradeOffers]="swap.tradeOffers" [isTradeOfferSelected]="isTradeSelected">
                 </app-swap-trades>
                 <ng-container *ngIf="(tradeOfferToDisplay$ | async) as tradeOfferToDisplay">
                     <app-trade-offer *ngIf="isTradeOwner && loggedInUser._id !== swap._ownerId"

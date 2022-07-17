@@ -6,7 +6,7 @@
             <th scope="col" sortable="area">Trade End Date</th>
             <th scope="col" sortable="population">Trade User</th>
             <th scope="col">Status</th>
-            <th scope="col">Actions</th>
+            <th *ngIf="!isTradeOfferSelected" scope="col">Actions</th>
         </tr>
     </thead>
 
@@ -24,7 +24,7 @@
             <td *ngIf="tradeOffer.status.pending === true">Pending</td>
             <td *ngIf="tradeOffer.status.accepted === true">Accepted</td>
             <td *ngIf="tradeOffer.status.declined=== true">Declined</td>
-            <td>
+            <td *ngIf="!isTradeOfferSelected">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-success">Accept</button>
                     <button type="button" class="btn btn-danger">Decline</button>

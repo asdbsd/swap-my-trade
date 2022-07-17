@@ -11,6 +11,7 @@ import { EventEmitter } from '@angular/core';
 export class SwapTradesComponent implements OnInit {
 
   @Input() tradeOffers!: ITrades[];
+  @Input() isTradeOfferSelected!: boolean;
   @Output() isTradeSelected = new EventEmitter<boolean>();
 
   constructor(
