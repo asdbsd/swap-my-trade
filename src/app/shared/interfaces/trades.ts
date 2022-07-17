@@ -10,6 +10,6 @@ export interface ITrades {
     tradeImages: string[];
     address: string;
     notes: string;
-    user: string;
+    user: { _id: string; name: string; };
     swapId: string;
 }

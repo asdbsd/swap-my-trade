@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ISwap } from 'src/app/shared/interfaces/swaps';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { ITrades } from 'src/app/shared/interfaces/trades';
 import { UserService } from 'src/app/users/user.service';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-swap-trades',
@@ -12,17 +11,21 @@ import { UserService } from 'src/app/users/user.service';
 export class SwapTradesComponent implements OnInit {
 
   @Input() tradeOffers!: ITrades[];
+  @Output() isTradeSelected = new EventEmitter<boolean>();
 
   constructor(
     private userService: UserService
   ) { }
 
   ngOnInit(): void {
-    this.tradeOffers.forEach(offer => {
-      this.userService.getProfileById(offer.user).subscribe(profile => {
-        offer.user = profile.firstName
-      });
-    });
+
+  }
+
+  
+  onTradeOfferSelected(event: any): void {
+    if(event.target!.tagName === 'TD' && event.target.parentElement.tagName === 'TR') {
+      this.isTradeSelected.emit(event.target.parentElement.id);
+    }
   }
 
 }

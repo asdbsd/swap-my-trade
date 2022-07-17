@@ -17,7 +17,7 @@ export interface ISwap {
         tradesRequested: any[];
         address: string;
         notes: string;
-        user: string;
+        user: { _id: string, name: string; };
         swapId: string;
         tradeImages: string[];
     }];

@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, of, Subscription, switchMap} from 'rxjs';
 import { currentErrorSelector, currentUserSelector } from 'src/app/+store/selectors';
+import { ImageService } from 'src/app/shared/image-service';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
+import { ITrades } from 'src/app/shared/interfaces/trades';
 import { TradeService } from 'src/app/trades/trade.service';
 import { SwapService } from '../swap.service';
 
@@ -15,11 +17,17 @@ import { SwapService } from '../swap.service';
 })
 export class SwapDetailsComponent implements OnInit, OnDestroy {
   
-
+  isTradeOwnerSubscription!: Subscription;
+  tradeOfferSubscription!: Subscription;
+  
   swap$!: Observable<ISwap>;
   loggedInUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
+  
+  tradeOfferToDisplay$!: Observable<ITrades>;
+  tradeImages!: string[];
+  
+  isTradeSelected: boolean = false;
   isTradeOwner: boolean = false;
-  isTradeOwnerSubscription!: Subscription;
   formImages: any[] = [];
 
   uploading: number = 0;
@@ -32,6 +40,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     private tradeService: TradeService,
     private activatedRoute: ActivatedRoute,
     private store: Store<any>,
+    private imageService: ImageService
   ) { }
 
 
@@ -49,16 +58,38 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     this.isTradeOwnerSubscription = combineLatest([
       this.loggedInUser$,
       this.swap$
-    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user === loggedInUser?._id ? this.isTradeOwner = true : null ));
+    ]).subscribe(([loggedInUser, swap]) => swap.tradeOffers.forEach(offer => offer.user._id === loggedInUser?._id ? this.isTradeOwner = true : null ));
+    
+    this.tradeOfferToDisplay$ = combineLatest([
+      this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']),
+      this.loggedInUser$
+    ]).pipe(
+      map(([swap, loggedInUser]) => {
+        return swap.tradeOffers.filter(offer => offer.user._id === loggedInUser?._id).pop()!;
+      })
+    )
 
-    
-    
+    this.tradeOfferSubscription = combineLatest([this.swap$, this.tradeOfferToDisplay$]).subscribe(([swap, offer]) => {
+      this.imageService.getTradeImages(swap._id, offer.user._id).then((links) => this.tradeImages = links);
+    })
+
   }
-
 
   ngOnDestroy(): void {
     this.isTradeOwnerSubscription.unsubscribe();
+    this.tradeOfferSubscription.unsubscribe();
+  }
 
+  setTradeSelected(targetId: any) {
+    this.isTradeSelected = true;
+    this.tradeOfferToDisplay$ = this.swap$.pipe(
+      switchMap((swap) => of(swap.tradeOffers.filter(offer => offer.user._id === targetId).pop()!))
+    )
+
+    this.tradeOfferSubscription = combineLatest([this.swap$, this.tradeOfferToDisplay$]).subscribe(([swap, offer]) => {
+      this.imageService.getTradeImages(swap._id, offer.user._id).then((links) => this.tradeImages = links);
+    })
+    
   }
 
   // async onSwapOfferSubmit(form: NgForm, $event: any) {

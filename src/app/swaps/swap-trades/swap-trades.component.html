@@ -1,16 +1,17 @@
-<table class="table table-striped">
+<table class="table table-striped" (click)="onTradeOfferSelected($event)">
     <thead>
         <tr>
             <th scope="col" sortable="name">Requested Trades</th>
             <th scope="col" sortable="name">Trade Start Date</th>
             <th scope="col" sortable="area">Trade End Date</th>
             <th scope="col" sortable="population">Trade User</th>
-            <th scope="col">STATUS</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
 
     <tbody *ngIf="tradeOffers">
-        <tr *ngFor="let tradeOffer of tradeOffers">
+        <tr *ngFor="let tradeOffer of tradeOffers" data-id="{{tradeOffer.user._id}}">
             <!-- <td>
                         <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="me-2"
                             style="width: 20px">
@@ -19,10 +20,16 @@
             <td>{{ tradeOffer.tradesRequested }}</td>
             <td>{{ tradeOffer.startByDate }}</td>
             <td>{{ tradeOffer.endByDate }}</td>
-            <td>{{ tradeOffer.user }}</td>
+            <td>{{ tradeOffer.user.name }}</td>
             <td *ngIf="tradeOffer.status.pending === true">Pending</td>
             <td *ngIf="tradeOffer.status.accepted === true">Accepted</td>
             <td *ngIf="tradeOffer.status.declined=== true">Declined</td>
+            <td>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success">Accept</button>
+                    <button type="button" class="btn btn-danger">Decline</button>
+                </div>
+            </td>
         </tr>
     </tbody>
 </table>

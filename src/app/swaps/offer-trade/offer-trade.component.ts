@@ -119,7 +119,7 @@ export class OfferTradeComponent implements OnInit {
       tradesRequested: selectedTrades,
       address: combinedAddress,
       notes: form.value.tradeNoteInput,
-      user: this.offerUser._id,
+      user: { _id: this.offerUser._id, name: this.offerUser.firstName + ' ' + this.offerUser.lastName},
       swapId: this.swap._id,
       tradeImages: this.currrentImagesToUpload
     }
