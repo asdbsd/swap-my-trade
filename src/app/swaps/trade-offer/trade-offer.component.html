@@ -10,7 +10,7 @@
 
     </h4>
 
-    <div class="text-center mb-3">
+    <div *ngIf="isLoggedIn" class="text-center mb-3">
         <div class="btn-group btn-group-md" role="group" aria-label="action-buttons">
             <button type="button" class="btn btn-success">Accept</button>
             <button type="button" class="btn btn-danger">Decline</button>

@@ -11,6 +11,7 @@ export class TradeOfferComponent implements OnInit {
 
   @Input() tradeOffer!: ITrades;
   @Input() tradeImages!: string[];
+  @Input() isLoggedIn!: boolean;
 
 
   constructor( 

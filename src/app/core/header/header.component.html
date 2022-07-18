@@ -16,17 +16,17 @@
                     #instance="ngbTypeahead" -->
             </form>
 
-
             <div *ngIf="!isLoggedIn">
                 <button type="button" routerLink="/login" class="btn btn-primary btn-sm px-4">Login</button>
-                <button type="button" routerLink="/register" class="btn btn-outline-success btn-sm px-4">Register</button>
+                <button type="button" routerLink="/register"
+                    class="btn btn-outline-success btn-sm px-4">Register</button>
             </div>
 
             <div *ngIf="isLoggedIn">
                 <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
                     <a (click)="toggelProfileNav(profileUl, $event)" class="d-block link-dark text-decoration-none">
-                        <img src="/assets/swap-my-trade-profile.png"
-                            alt="mdo" width="32" height="32" class="rounded-circle">
+                        <img src="/assets/swap-my-trade-profile.png" alt="mdo" width="32" height="32"
+                            class="rounded-circle">
                     </a>
                 </a>
 
@@ -42,6 +42,9 @@
                     </ul>
                 </div>
             </div>
+
+            <button *ngIf="isLoggedIn" type="button" routerLink="/swaps/add"
+            class="btn btn-success btn-sm">Add Swap</button>
 
 
         </div>
