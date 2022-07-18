@@ -42,17 +42,36 @@ export const environment = {
 ### SWAP FUNCTIONALITY
 
 **Swap view as Non-Logged In**
-![swap-view-as-non-logged-in](https://ibb.co/Yjh8dPq)
+<br/>
+![swap-view-as-non-logged-in](https://i.ibb.co/BsBj6cS/non-logged-in.png)
+
+
 **Create new Swap**
-![swap-view-as-non-logged-in](https://ibb.co/yhqMrct)
+<br/>
+
+![swap-view-as-non-logged-in](https://i.ibb.co/gvJXxLN/add-swap.png)
+
+
 **Logged in user, not swap owner, offer trade view**
-![logged-in-not-owner-ofer-trade](https://ibb.co/R3TgFHV)
+<br/>
+
+![logged-in-not-owner-ofer-trade](https://i.ibb.co/1rG0g2w/not-swap-owner-offer-trade.png)
+
+
 **Logged in user, not swap owner, trade offered view**
-![logged-in-not-owner-trade-offered](https://ibb.co/k2jKgwb)
+<br/>
+
+![logged-in-not-owner-trade-offered](https://i.ibb.co/4RzWZXv/not-swap-owner-trade-offer.png)
+
+
 **Logged in user, swap owner, trades list view**
-![logged-in-owner-trades-list-view](https://ibb.co/7gt1S3s)
+<br/>
+
+![logged-in-owner-trades-list-view](https://i.ibb.co/z8V4m3q/swap-owner-trades.png)
+
+
 **Logged in user, swap owner, selected from the list view**
-![logged-in-owner-trade-selected-view](https://ibb.co/dQqb0t8)
+![logged-in-owner-trade-selected-view](https://i.ibb.co/MR48DfF/swap-owner-on-trade-select.png)
 
 
 
