@@ -71,6 +71,8 @@ export const environment = {
 
 
 **Logged in user, swap owner, selected from the list view**
+<br/>
+
 ![logged-in-owner-trade-selected-view](https://i.ibb.co/MR48DfF/swap-owner-on-trade-select.png)
 
 
