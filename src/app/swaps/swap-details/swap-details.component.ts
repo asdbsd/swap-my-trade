@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, Observable, of, Subscription, switchMap } from 'rxjs';
@@ -20,6 +20,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
   isTradeOwnerSubscription!: Subscription;
   tradeOfferSubscription!: Subscription;
+  swapSubscription!: Subscription;
 
   swap$!: Observable<ISwap>;
   loggedInUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
@@ -31,7 +32,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   isTradeSelected: boolean = false;
   isTradeOwner: boolean = false;
   isSwapOwner: boolean = false;
-  swapHasAcceptedTrade: boolean = false;
+  isSwapCompleted: boolean = false;
 
   formImages: any[] = [];
 
@@ -58,7 +59,7 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     ]).pipe(
       switchMap(([swap, trades, loggedInUser]) => {
         swap._ownerId === loggedInUser?._id ? this.isSwapOwner = true : this.isSwapOwner = false;
-        swap.tradeOffers.forEach(offer => offer.status.accepted ? this.swapHasAcceptedTrade = true : null);
+        this.isSwapCompleted = swap.status.completed ? true : false
         trades.forEach(trade => trade._id === swap.trade ? swap.trade = trade.name : null);
         return of(swap);
       })
@@ -92,8 +93,6 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTradeSelected(event: any) {
-    console.log(this.isSwapOwner)
-
     if (this.previousTradeEvent && (event.target.parentElement.id === this.previousTradeEvent.target.parentElement.id)) {
       if (this.isTradeSelected) {
         event.target.parentElement.style.backgroundColor = '';
@@ -125,29 +124,30 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
   }
 
   onTradeAccepted(event: any): void {
-    let swapSubscription: Subscription;
-    let swapAndTradeOwnerProfile: Observable<[ISwap, IProfile]> = combineLatest([this.swap$, this.userService.getProfileById(event)]);
+    let swapAndTradeOwnerProfile: Observable<[ISwap, IProfile]> = combineLatest([this.swap$, this.userService.getProfileById(event.target.id)]);
 
-    if (typeof event === 'string') {
-      swapSubscription = swapAndTradeOwnerProfile.subscribe(([swap, offerOwnerProfile]) => {
-        swap.tradeOffers.forEach(offer => {
-          offer.status.pending = false;
-          offer.user._id === event ? offer.status.accepted = true : offer.status.declined = true;
-        });
-        this.swapService.partialSwapUpdate(swap._id, swap).then(() => { null }).catch(err => { throw new Error(err)});
-
-        offerOwnerProfile.myTradeOffers.forEach(offer => {
-          if(offer.swapId === swap._id) {
-            offer.status.pending = false
-            offer.status.accepted = true;
-            this.userService.partialProfileUpdate(offer.user._id, offer).then(() => { null }).catch(err => { throw new Error(err)});
-          }
-        })
-
-        swapSubscription.unsubscribe();
+    this.swapSubscription = swapAndTradeOwnerProfile.subscribe(([swap, offerOwnerProfile]) => {
+      swap.tradeOffers.forEach(offer => {
+        offer.status.pending = false;
+        offer.user._id === event.target.id ? offer.status.accepted = true : offer.status.declined = true;
       });
+      swap.status.completed = true;
+      this.swapService.partialSwapUpdate(swap._id, swap)
 
-    }
+      const currentTradeOffer = offerOwnerProfile.myTradeOffers.filter(offer => offer.swapId === swap._id).pop()!; 
+      currentTradeOffer.status.pending = false;
+      currentTradeOffer.status.accepted = true;
+
+      this.swapService.partialSwapUpdate(swap._id, swap).then(() => 
+        this.userService.partialProfileUpdate(currentTradeOffer.user._id, offerOwnerProfile)
+          .then()
+          .catch(err => { throw new Error(err) })
+        ).catch(err => { throw new Error(err) })
+    });
+
+    setInterval(() => {
+      this.swapSubscription.unsubscribe();
+    }, 2500);
   }
 
   onImgUpload(event: any) {

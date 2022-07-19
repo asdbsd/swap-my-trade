@@ -63,6 +63,7 @@ export class OfferTradeComponent implements OnInit {
       setTimeout(() => {
         this.store.dispatch(clearError());
       }, 3500)
+      this.isUploading = false;
       return;
     };
 
@@ -71,8 +72,11 @@ export class OfferTradeComponent implements OnInit {
       setTimeout(() => {
         this.store.dispatch(clearError());
       }, 3500)
+      this.isUploading = false;
       return;
     };
+
+    
 
     const combinedAddress = form.value.tradeAddress + ', ' + form.value.tradeAddress2;
 
@@ -86,12 +90,12 @@ export class OfferTradeComponent implements OnInit {
           try {
             await this.imageService.uploadTradesImg(this.swap._id, this.currrentImagesToUpload[i].name, this.offerUser._id, this.currrentImagesToUpload[i]);
           } catch (err) {
-            this.isUploading = false;
-            this.uploading = 0;
             this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.' }));
             setTimeout(() => {
               this.store.dispatch(clearError());
             }, 3500)
+            this.isUploading = false;
+            this.uploading = 0;
             return;
           }
         }
@@ -99,12 +103,13 @@ export class OfferTradeComponent implements OnInit {
 
       this.currrentImagesToUpload = this.currrentImagesToUpload.map(image => image.name)
     } catch (err) {
-      this.isUploading = false;
-      this.uploading = 0;
+      
       this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.' }));
       setTimeout(() => {
         this.store.dispatch(clearError());
       }, 3500)
+      this.isUploading = false;
+      this.uploading = 0;
       return;
     }
 
@@ -130,10 +135,11 @@ export class OfferTradeComponent implements OnInit {
       await this.swapService.partialSwapUpdate(this.swap._id, this.swap);
       await this.userService.partialProfileUpdate(this.offerUser._id, { myTradeOffers: Object.assign([], this.offerUser.myTradeOffers, [newTradeOffer])});
     } catch (err) {
+      this.isUploading = false;
+      this.uploading = 0;
       return;
     }
-
-    this.isUploading = false;
+    
     this.uploading = 0;
     form.reset();
 

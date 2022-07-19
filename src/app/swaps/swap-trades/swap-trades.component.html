@@ -1,4 +1,4 @@
-<table class="table table-striped" (click)="onSelectTradeOffer($event)">
+<table *ngIf="tradeOffers" class="table table-striped" (click)="onSelectTradeOffer($event)">
     <thead>
         <tr>
             <th scope="col" sortable="name">Requested Trades</th>
@@ -6,11 +6,11 @@
             <th scope="col" sortable="area">End By Date</th>
             <th scope="col" sortable="population">Trade User</th>
             <th scope="col">Status</th>
-            <th *ngIf="!swapHasAcceptedTrade" scope="col">Actions</th>
+            <th *ngIf="!isSwapCompleted && swapIncludesPendingOffers" scope="col">Actions</th>
         </tr>
     </thead>
 
-    <tbody *ngIf="tradeOffers">
+    <tbody>
         <tr *ngFor="let tradeOffer of tradeOffers" data-id="{{tradeOffer.user._id}}">
             <!-- <td>
                         <img [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag" class="me-2"
@@ -24,9 +24,12 @@
             <td *ngIf="tradeOffer.status.pending">Pending</td>
             <td *ngIf="tradeOffer.status.accepted">Accepted</td>
             <td *ngIf="tradeOffer.status.declined">Declined</td>
-            <td *ngIf="!swapHasAcceptedTrade">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>
+            <td *ngIf="!isSwapCompleted && swapIncludesPendingOffers">
+                <div *ngIf="tradeOffer.status.declined">
+                    <span>Can't take action</span>
+                </div>
+                <div *ngIf="tradeOffer.status.pending" class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                    <button type="button" data-id="{{tradeOffer.user._id}}" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>
                     <button type="button" class="btn btn-danger">Decline</button>
                 </div>
             </td>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ITrades } from 'src/app/shared/interfaces/trades';
 
@@ -11,17 +12,18 @@ export class TradeOfferComponent implements OnInit {
 
   @Input() tradeOffer!: ITrades;
   @Input() tradeImages!: string[];
-  @Input() swapHasAcceptedTrade!: boolean;
+  @Input() isSwapCompleted!: boolean;
   @Input() isSwapOwner!: boolean;
 
-
   @Output() offerAcceptedEmiter = new EventEmitter<any>()
+
+  isTradeOfferPending: boolean = false;
 
 
   constructor( ) { }
 
   ngOnInit(): void {
-
+    this.isTradeOfferPending = this.tradeOffer.status.pending;
   }
 
   onTradeOfferAccepted(event: any): void {
