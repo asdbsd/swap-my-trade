@@ -8,6 +8,7 @@ import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ISwap } from 'src/app/shared/interfaces/swaps';
 import { ITrades } from 'src/app/shared/interfaces/trades';
 import { TradeService } from 'src/app/trades/trade.service';
+import { UserService } from 'src/app/users/user.service';
 import { SwapService } from '../swap.service';
 
 @Component({
@@ -22,13 +23,16 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
   swap$!: Observable<ISwap>;
   loggedInUser$: Observable<IProfile | null> = this.store.select(currentUserSelector);
-
   tradeOfferToDisplay$!: Observable<ITrades>;
+
   tradeImages!: string[];
   previousTradeEvent!: any;
 
   isTradeSelected: boolean = false;
   isTradeOwner: boolean = false;
+  isSwapOwner: boolean = false;
+  swapHasAcceptedTrade: boolean = false;
+
   formImages: any[] = [];
 
   uploading: number = 0;
@@ -41,16 +45,20 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     private tradeService: TradeService,
     private activatedRoute: ActivatedRoute,
     private store: Store<any>,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private userService: UserService
   ) { }
 
 
   ngOnInit(): void {
     this.swap$ = combineLatest([
       this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']),
-      this.tradeService.getTrades()
+      this.tradeService.getTrades(),
+      this.loggedInUser$
     ]).pipe(
-      switchMap(([swap, trades]) => {
+      switchMap(([swap, trades, loggedInUser]) => {
+        swap._ownerId === loggedInUser?._id ? this.isSwapOwner = true : this.isSwapOwner = false;
+        swap.tradeOffers.forEach(offer => offer.status.accepted ? this.swapHasAcceptedTrade = true : null);
         trades.forEach(trade => trade._id === swap.trade ? swap.trade = trade.name : null);
         return of(swap);
       })
@@ -68,11 +76,13 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
       map(([swap, loggedInUser]) => {
         return swap.tradeOffers.filter(offer => offer.user._id === loggedInUser?._id).pop()!;
       })
-    )
+    );
 
     this.tradeOfferSubscription = combineLatest([this.swap$, this.tradeOfferToDisplay$]).subscribe(([swap, offer]) => {
-      this.imageService.getTradeImages(swap._id, offer.user._id).then((links) => this.tradeImages = links);
-    })
+      if (offer) {
+        this.imageService.getTradeImages(swap._id, offer.user._id).then((links) => this.tradeImages = links);
+      }
+    });
 
   }
 
@@ -81,10 +91,11 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     this.tradeOfferSubscription.unsubscribe();
   }
 
-  setTradeSelected(event: any) {
+  onTradeSelected(event: any) {
+    console.log(this.isSwapOwner)
 
     if (this.previousTradeEvent && (event.target.parentElement.id === this.previousTradeEvent.target.parentElement.id)) {
-      if(this.isTradeSelected) {
+      if (this.isTradeSelected) {
         event.target.parentElement.style.backgroundColor = '';
       } else {
         event.target.parentElement.style.backgroundColor = '#FFF2CC';
@@ -113,146 +124,33 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
   }
 
-  // async onSwapOfferSubmit(form: NgForm, $event: any) {
-  //   this.isUploading = true;
-  //   if (form.invalid) { return; }
+  onTradeAccepted(event: any): void {
+    let swapSubscription: Subscription;
+    let swapAndTradeOwnerProfile: Observable<[ISwap, IProfile]> = combineLatest([this.swap$, this.userService.getProfileById(event)]);
 
-  //   const requestedTrades = [];
-  //   for (let [k, v] of Object.entries(form.value)) { v === true ? requestedTrades.push(k) : null; }
+    if (typeof event === 'string') {
+      swapSubscription = swapAndTradeOwnerProfile.subscribe(([swap, offerOwnerProfile]) => {
+        swap.tradeOffers.forEach(offer => {
+          offer.status.pending = false;
+          offer.user._id === event ? offer.status.accepted = true : offer.status.declined = true;
+        });
+        this.swapService.partialSwapUpdate(swap._id, swap).then(() => { null }).catch(err => { throw new Error(err)});
 
-  //   if (requestedTrades.length < 1) {
-  //     this.store.dispatch(addError({ error: 'At least one trade must be selected.' }));
-  //     setTimeout(() => {
-  //       this.store.dispatch(clearError());
-  //     }, 3500)
-  //     return
-  //   };
+        offerOwnerProfile.myTradeOffers.forEach(offer => {
+          if(offer.swapId === swap._id) {
+            offer.status.pending = false
+            offer.status.accepted = true;
+            this.userService.partialProfileUpdate(offer.user._id, offer).then(() => { null }).catch(err => { throw new Error(err)});
+          }
+        })
 
-  //   const formIsValid = validations.notes(form.value.additionalNotes)
-  //     && validations.openUntil(form.value.swapStartDate)
-  //     && validations.openUntil(form.value.swapEndDate)
-  //     && validations.title(form.value.address)
+        swapSubscription.unsubscribe();
+      });
 
-
-  //   if (form.invalid || !formIsValid) { return }
-
-  //   try {
-  //     const combinedAddress = form.value.address + ', ' + form.value.address2;
-
-  //     let imageNames: string[] = [];
-  //     if (this.formImages.length) { imageNames = this.formImages.map(v => v.name) }
-  //     this.swap.swapOffers.push({
-  //       status: {
-  //         accepted: false,
-  //         pending: true,
-  //         declined: false
-  //       },
-  //       swapEndDate: form.value.swapStartDate,
-  //       swapStartDate: form.value.swapEndDate,
-  //       tradesRequested: requestedTrades,
-  //       address: combinedAddress,
-  //       notes: form.value.additionalNotes,
-  //       swapOfferImages: imageNames,
-  //       user: this.currentUser!._id
-  //     });
-
-  //     await this.swapService.partialSwapUpdate(
-  //       this.swap._id,
-  //       this.swap.swapOffers,
-  //       this.swap.tradeOffers
-  //     );
-
-  //     if (this.formImages.length) {
-  //       for (let i = 0; i < this.formImages.length; i++) {
-  //         this.uploading = Math.round((100 * i) / this.formImages.length);
-  //         try {
-  //           await this.imageStorage.uploadImg(this.currentUser!._id, this.formImages[i].name, this.formImages[i]);
-
-  //         } catch (err) {
-  //           this.isUploading = false;
-  //           this.uploading = 0;
-  //           this.store.dispatch(addError({ error: 'There was an error while uploading Images. Please try again.' }));
-  //           setTimeout(() => {
-  //             this.store.dispatch(clearError());
-  //           }, 3500)
-  //           return;
-  //         }
-  //       }
-  //       this.isUploading = false;
-  //       this.uploading = 0;
-  //     }
-
-  //     this.router.navigate([`/swaps/${this.swap._id}`]);
-  //     $event.target.form.reset();
-  //   } catch (err) {
-  //     this.isUploading = false
-  //     this.uploading = 0;
-  //     console.log(err);
-  //     this.store.dispatch(addError({ error: 'There was an error while adding your Swap. Please try again.' }));
-  //     setTimeout(() => {
-  //       this.store.dispatch(clearError());
-  //     }, 3500)
-  //     return;
-  //   }
-
-  // }
-
-
-  onAcceptOffer() {
-    // const getSwapSubscription = this.swapService.getSwapById(this.activatedRoute.snapshot.params['id']).subscribe(
-    //   (swap) => {
-    //     const newSwapOffers = Object.assign([],
-    //       (swap.swapOffers.filter(offer => offer.user == this.currentUser!._id)),
-    //       { status: { pending: false, declined: false, accepted: true } });
-    //     this.swapService.partialSwapUpdate(this.activatedRoute.snapshot.params['id'], [newSwapOffers]).then(() => null);
-
-    //   }
-    // );
-    // getSwapSubscription.unsubscribe();
+    }
   }
 
-
-
-  // async onTradeSubmit(form: NgForm, event: Event) {
-  //   if (form.invalid) { return; }
-
-  //   const offeredTrades = this.currentSwapOffer.tradesRequested
-
-  //   if (offeredTrades.length < 1) {
-  //     this.store.dispatch(addError({ error: 'At least one trade must be selected.' }));
-  //     setTimeout(() => {
-  //       this.store.dispatch(clearError());
-  //     }, 3500)
-  //     return
-  //   };
-
-  //   const combinedAddress = form.value.address + ', ' + form.value.address2;
-
-  //   this.swap.tradeOffers.push({
-  //     status: {
-  //       accepted: false,
-  //       pending: true,
-  //       declined: false
-  //     },
-  //     tradeStartDate: form.value.tradeStartDate,
-  //     tradeEndDate: form.value.tradeEndDate,
-  //     tradesRequested: offeredTrades,
-  //     address: combinedAddress,
-  //     notes: form.value.additionalNotes,
-  //     user: this.currentUser!._id
-  //   });
-
-  //   await this.swapService.partialSwapUpdate(
-  //     this.swap._id,
-  //     this.swap.swapOffers,
-  //     this.swap.tradeOffers
-  //   );
-
-
-  //   this.router.navigate([`/swaps/${this.swap._id}`]);
-  // }
-
-  async onImgUpload(event: any) {
+  onImgUpload(event: any) {
     if (event.target.files.length) {
       const files: any[] = Array.from(event.target.files);
       this.formImages = files

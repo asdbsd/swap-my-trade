@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ImageService } from 'src/app/shared/image-service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ITrades } from 'src/app/shared/interfaces/trades';
 
 @Component({
@@ -11,15 +11,25 @@ export class TradeOfferComponent implements OnInit {
 
   @Input() tradeOffer!: ITrades;
   @Input() tradeImages!: string[];
-  @Input() isLoggedIn!: boolean;
+  @Input() swapHasAcceptedTrade!: boolean;
+  @Input() isSwapOwner!: boolean;
 
 
-  constructor( 
-    private imageService: ImageService
-  ) { }
+  @Output() offerAcceptedEmiter = new EventEmitter<any>()
+
+
+  constructor( ) { }
 
   ngOnInit(): void {
 
+  }
+
+  onTradeOfferAccepted(event: any): void {
+    const isAccepted = confirm('Confirm accepting selected trade offer. This operation will decline all other existing offers.');
+
+    if(isAccepted) {
+      this.offerAcceptedEmiter.emit(event);
+    }
   }
 
 }

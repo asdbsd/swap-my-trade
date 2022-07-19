@@ -4,15 +4,15 @@
     <h4 class="d-flex justify-content-between align-items-center mb-3">
         <span class="text-primary">My Trade Offer</span>
 
-        <h6 *ngIf="tradeOffer.status.pending === true"><span class="badge bg-primary">Pending</span></h6>
-        <h6 *ngIf="tradeOffer.status.accepted === true"><span class="badge bg-primary">Accepted</span></h6>
-        <h6 *ngIf="tradeOffer.status.declined === true"><span class="badge bg-primary">Declined</span></h6>
+        <h6 *ngIf="tradeOffer.status.pending"><span class="badge bg-primary">Pending</span></h6>
+        <h6 *ngIf="tradeOffer.status.accepted"><span class="badge bg-success">Accepted</span></h6>
+        <h6 *ngIf="tradeOffer.status.declined"><span class="badge bg-danger">Declined</span></h6>
 
     </h4>
 
-    <div *ngIf="isLoggedIn" class="text-center mb-3">
+    <div *ngIf="!swapHasAcceptedTrade && isSwapOwner" class="text-center mb-3">
         <div class="btn-group btn-group-md" role="group" aria-label="action-buttons">
-            <button type="button" class="btn btn-success">Accept</button>
+            <button type="button" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>
             <button type="button" class="btn btn-danger">Decline</button>
         </div>
     </div>

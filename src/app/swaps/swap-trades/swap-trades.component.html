@@ -1,4 +1,4 @@
-<table class="table table-striped" (click)="onTradeOfferSelected($event)">
+<table class="table table-striped" (click)="onSelectTradeOffer($event)">
     <thead>
         <tr>
             <th scope="col" sortable="name">Requested Trades</th>
@@ -6,7 +6,7 @@
             <th scope="col" sortable="area">End By Date</th>
             <th scope="col" sortable="population">Trade User</th>
             <th scope="col">Status</th>
-            <th *ngIf="!isTradeOfferSelected" scope="col">Actions</th>
+            <th *ngIf="!swapHasAcceptedTrade" scope="col">Actions</th>
         </tr>
     </thead>
 
@@ -21,12 +21,12 @@
             <td>{{ tradeOffer.startByDate }}</td>
             <td>{{ tradeOffer.endByDate }}</td>
             <td>{{ tradeOffer.user.name }}</td>
-            <td *ngIf="tradeOffer.status.pending === true">Pending</td>
-            <td *ngIf="tradeOffer.status.accepted === true">Accepted</td>
-            <td *ngIf="tradeOffer.status.declined=== true">Declined</td>
-            <td *ngIf="!isTradeOfferSelected">
+            <td *ngIf="tradeOffer.status.pending">Pending</td>
+            <td *ngIf="tradeOffer.status.accepted">Accepted</td>
+            <td *ngIf="tradeOffer.status.declined">Declined</td>
+            <td *ngIf="!swapHasAcceptedTrade">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success">Accept</button>
+                    <button type="button" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>
                     <button type="button" class="btn btn-danger">Decline</button>
                 </div>
             </td>

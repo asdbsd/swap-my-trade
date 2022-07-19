@@ -12,7 +12,10 @@ export class SwapTradesComponent implements OnInit {
 
   @Input() tradeOffers!: ITrades[];
   @Input() isTradeOfferSelected!: boolean;
+  @Input() swapHasAcceptedTrade!: boolean;
+
   @Output() isTradeSelected = new EventEmitter<boolean>();
+  @Output() offerAcceptedFromTradesEmitter = new EventEmitter<any>();
 
   constructor(
     private userService: UserService
@@ -22,10 +25,18 @@ export class SwapTradesComponent implements OnInit {
 
   }
 
-  
-  onTradeOfferSelected(event: any): void {
+  onSelectTradeOffer(event: any): void {
     if(event.target!.tagName === 'TD' && event.target.parentElement.tagName === 'TR') {
       this.isTradeSelected.emit(event);
+    }
+  }
+
+  onTradeOfferAccepted(event: any): void {
+    const isAccepted = confirm('Confirm accepting selected trade offer. This operation will decline all other existing offers.');
+    console.log(isAccepted);
+
+    if(isAccepted) {
+      this.offerAcceptedFromTradesEmitter.emit(event);
     }
   }
 
