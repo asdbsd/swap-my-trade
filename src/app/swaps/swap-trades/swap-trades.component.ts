@@ -16,6 +16,7 @@ export class SwapTradesComponent implements OnInit {
 
   @Output() isTradeSelected = new EventEmitter<boolean>();
   @Output() offerAcceptedFromTradesEmitter = new EventEmitter<any>();
+  @Output() offerDeclinedFromTradesEmitter = new EventEmitter<any>();
 
   swapIncludesPendingOffers: boolean = false;
 
@@ -37,6 +38,14 @@ export class SwapTradesComponent implements OnInit {
 
     if(isAccepted) {
       this.offerAcceptedFromTradesEmitter.emit(event);
+    }
+  }
+
+  onTradeOfferDeclined(event: any):void {
+    const isAccepted = confirm('Confirm declining selected trade offer. You won\'t be able to revert back this operation.');
+
+    if(isAccepted) {
+      this.offerDeclinedFromTradesEmitter.emit(event);
     }
   }
 

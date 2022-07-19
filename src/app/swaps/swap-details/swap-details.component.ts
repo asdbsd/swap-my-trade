@@ -150,6 +150,10 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
     }, 2500);
   }
 
+  onTradeDeclined(event: any): void {
+
+  }
+
   onImgUpload(event: any) {
     if (event.target.files.length) {
       const files: any[] = Array.from(event.target.files);
