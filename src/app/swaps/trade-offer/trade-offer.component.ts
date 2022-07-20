@@ -19,7 +19,7 @@ export class TradeOfferComponent implements OnInit, OnChanges {
   isTradeOfferPending: boolean = false;
 
 
-  constructor( ) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.isTradeOfferPending = this.tradeOffer.status.pending;
@@ -29,7 +29,7 @@ export class TradeOfferComponent implements OnInit, OnChanges {
   onTradeOfferAccepted(event: any): void {
     const isAccepted = confirm('Confirm accepting selected trade offer. This operation will decline all other existing offers.');
 
-    if(isAccepted) {
+    if (isAccepted) {
       this.offerAcceptedEmiter.emit(event);
     }
   }
@@ -38,15 +38,14 @@ export class TradeOfferComponent implements OnInit, OnChanges {
     const isAccepted = confirm('Confirm declining selected trade offer. You won\'t be able to revert back this operation.');
     console.log(this.isTradeOfferPending);
 
-    if(isAccepted) {
+    if (isAccepted) {
       this.offerDeclinedEmitter.emit(event);
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['tradeOffer'].currentValue.status.declined === true) {
-      this.isTradeOfferPending = this.tradeOffer.status.pending;
-    }
+    this.isTradeOfferPending = this.tradeOffer.status.pending;
+
   }
 
 }

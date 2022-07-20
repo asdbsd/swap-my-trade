@@ -26,7 +26,7 @@
             <td *ngIf="tradeOffer.status.declined">Declined</td>
             <td *ngIf="!isSwapCompleted && swapIncludesPendingOffers">
                 <div *ngIf="tradeOffer.status.declined || tradeOffer.status.accepted">
-                    <span>Can't take action</span>
+                    <span>Already Declined</span>
                 </div>
                 <div *ngIf="tradeOffer && tradeOffer.status.pending" class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                     <button type="button" data-id="{{tradeOffer.user._id}}" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>

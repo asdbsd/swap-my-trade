@@ -48,10 +48,13 @@
         </li>
     </ul>
 
-    <h5 class="text-center">Trade Offer Images</h5>
+    <div *ngIf="tradeImages.length">
+        <h5 class="text-center">Trade Offer Images</h5>
 
-    <div class="text-center">
-        <app-swap-images [imagesLinks]="tradeImages"></app-swap-images>
+        <div class="text-center">
+            <app-swap-images [imagesLinks]="tradeImages"></app-swap-images>
+        </div>
     </div>
+
 
 </div>
