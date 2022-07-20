@@ -1,6 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { IProfile } from 'src/app/shared/interfaces/profiles';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ITrades } from 'src/app/shared/interfaces/trades';
 
 @Component({
@@ -8,7 +6,7 @@ import { ITrades } from 'src/app/shared/interfaces/trades';
   templateUrl: './trade-offer.component.html',
   styleUrls: ['./trade-offer.component.scss']
 })
-export class TradeOfferComponent implements OnInit {
+export class TradeOfferComponent implements OnInit, OnChanges {
 
   @Input() tradeOffer!: ITrades;
   @Input() tradeImages!: string[];
@@ -16,6 +14,7 @@ export class TradeOfferComponent implements OnInit {
   @Input() isSwapOwner!: boolean;
 
   @Output() offerAcceptedEmiter = new EventEmitter<any>()
+  @Output() offerDeclinedEmitter = new EventEmitter<any>();
 
   isTradeOfferPending: boolean = false;
 
@@ -24,6 +23,7 @@ export class TradeOfferComponent implements OnInit {
 
   ngOnInit(): void {
     this.isTradeOfferPending = this.tradeOffer.status.pending;
+
   }
 
   onTradeOfferAccepted(event: any): void {
@@ -31,6 +31,21 @@ export class TradeOfferComponent implements OnInit {
 
     if(isAccepted) {
       this.offerAcceptedEmiter.emit(event);
+    }
+  }
+
+  onTradeOfferDeclined(event: any): void {
+    const isAccepted = confirm('Confirm declining selected trade offer. You won\'t be able to revert back this operation.');
+    console.log(this.isTradeOfferPending);
+
+    if(isAccepted) {
+      this.offerDeclinedEmitter.emit(event);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['tradeOffer'].currentValue.status.declined === true) {
+      this.isTradeOfferPending = this.tradeOffer.status.pending;
     }
   }
 

@@ -13,7 +13,7 @@
     <div *ngIf="!isSwapCompleted && isSwapOwner && isTradeOfferPending" class="text-center mb-3">
         <div class="btn-group btn-group-md" role="group" aria-label="action-buttons">
             <button type="button" data-id="{{tradeOffer.user._id}}" (click)="onTradeOfferAccepted($event)" class="btn btn-success">Accept</button>
-            <button type="button" class="btn btn-danger">Decline</button>
+            <button type="button" data-id="{{tradeOffer.user._id}}" (click)="onTradeOfferDeclined($event)" class="btn btn-danger">Decline</button>
         </div>
     </div>
 

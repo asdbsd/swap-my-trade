@@ -147,10 +147,36 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
 
     setInterval(() => {
       this.swapSubscription.unsubscribe();
-    }, 2500);
+    }, 1000);
   }
 
   onTradeDeclined(event: any): void {
+    let swapAndTradeOwnerProfile: Observable<[ISwap, IProfile]> = combineLatest([this.swap$, this.userService.getProfileById(event.target.id)]);
+
+    this.swapSubscription = swapAndTradeOwnerProfile.subscribe(([swap, offerOwnerProfile]) => {
+      swap.tradeOffers.forEach(offer => {
+        if(offer.user._id === event.target.id) {
+          offer.status.declined = true;
+          offer.status.pending = false;
+        }
+      });
+
+      this.swapService.partialSwapUpdate(swap._id, swap)
+
+      const currentTradeOffer = offerOwnerProfile.myTradeOffers.filter(offer => offer.swapId === swap._id).pop()!; 
+      currentTradeOffer.status.pending = false;
+      currentTradeOffer.status.declined = true;
+
+      this.swapService.partialSwapUpdate(swap._id, swap).then(() => 
+        this.userService.partialProfileUpdate(currentTradeOffer.user._id, offerOwnerProfile)
+          .then()
+          .catch(err => { throw new Error(err) })
+        ).catch(err => { throw new Error(err) })
+    });
+
+    setInterval(() => {
+      this.swapSubscription.unsubscribe();
+    }, 1000);
 
   }
 

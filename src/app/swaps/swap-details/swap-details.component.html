@@ -48,7 +48,7 @@
 
             <ng-container *ngIf="(loggedInUser$ | async) as loggedInUser">
 
-                <app-swap-trades (offerAcceptedFromTradesEmitter)="onTradeAccepted($event)" (isTradeSelected)="onTradeSelected($event)" (offerDeclinedFromTradesEmitter)="onTradeDeclined($event)"
+                <app-swap-trades (offerAcceptedFromTradesEmitter)="onTradeAccepted($event)" (isTradeSelected)="onTradeSelected($event)" (offerDeclinedEmitter)="onTradeDeclined($event)"
                     *ngIf="swap._ownerId === loggedInUser._id && swap.tradeOffers.length"
                     [tradeOffers]="swap.tradeOffers" [isTradeOfferSelected]="isTradeSelected" [isSwapCompleted]="isSwapCompleted">
                 </app-swap-trades>
@@ -59,7 +59,7 @@
                 </ng-container>
 
                 <ng-container *ngIf="(tradeOfferToDisplay$ | async) as tradeOfferToDisplay">
-                    <app-trade-offer (offerAcceptedEmiter)="onTradeAccepted($event)" *ngIf="isTradeSelected && loggedInUser._id === swap._ownerId" [isSwapOwner]="isSwapOwner" [tradeOffer]="tradeOfferToDisplay" [tradeImages]="tradeImages" [isSwapCompleted]="isSwapCompleted">
+                    <app-trade-offer (offerAcceptedEmiter)="onTradeAccepted($event)" (offerDeclinedEmitter)="onTradeDeclined($event)" *ngIf="isTradeSelected && loggedInUser._id === swap._ownerId" [isSwapOwner]="isSwapOwner" [tradeOffer]="tradeOfferToDisplay" [tradeImages]="tradeImages" [isSwapCompleted]="isSwapCompleted">
                     </app-trade-offer>
                 </ng-container>
 

@@ -8,7 +8,7 @@ import { EventEmitter } from '@angular/core';
   templateUrl: './swap-trades.component.html',
   styleUrls: ['./swap-trades.component.scss']
 })
-export class SwapTradesComponent implements OnInit {
+export class SwapTradesComponent implements OnInit, OnChanges {
 
   @Input() tradeOffers!: ITrades[];
   @Input() isTradeOfferSelected!: boolean;
@@ -16,7 +16,7 @@ export class SwapTradesComponent implements OnInit {
 
   @Output() isTradeSelected = new EventEmitter<boolean>();
   @Output() offerAcceptedFromTradesEmitter = new EventEmitter<any>();
-  @Output() offerDeclinedFromTradesEmitter = new EventEmitter<any>();
+  @Output() offerDeclinedEmitter = new EventEmitter<any>();
 
   swapIncludesPendingOffers: boolean = false;
 
@@ -27,6 +27,11 @@ export class SwapTradesComponent implements OnInit {
   ngOnInit(): void {
     this.swapIncludesPendingOffers = this.tradeOffers.filter(offer => offer.status.pending).length > 0;
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.swapIncludesPendingOffers = this.tradeOffers.filter(offer => offer.status.pending).length > 0;
+  }
+
   onSelectTradeOffer(event: any): void {
     if(event.target!.tagName === 'TD' && event.target.parentElement.tagName === 'TR') {
       this.isTradeSelected.emit(event);
@@ -45,7 +50,7 @@ export class SwapTradesComponent implements OnInit {
     const isAccepted = confirm('Confirm declining selected trade offer. You won\'t be able to revert back this operation.');
 
     if(isAccepted) {
-      this.offerDeclinedFromTradesEmitter.emit(event);
+      this.offerDeclinedEmitter.emit(event);
     }
   }
 
