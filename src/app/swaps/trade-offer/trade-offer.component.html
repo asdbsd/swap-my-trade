@@ -31,10 +31,10 @@
             </div>
         </li>
 
-        <li class="list-group-item d-flex justify-content-between lh-sm">
+        <li *ngIf="tradeOffer.tradesRequested" class="list-group-item d-flex justify-content-between lh-sm">
             <div>
                 <h6 class="my-0">Requested Trade/Trades</h6>
-                <h6 *ngFor="let trade of tradeOffer?.tradesRequested"><span class="badge bg-info">{{trade}}</span>
+                <h6 *ngFor="let trade of tradeOffer.tradesRequested"><span class="badge bg-info">{{trade}}</span>
                 </h6>
             </div>
         </li>
@@ -48,7 +48,7 @@
         </li>
     </ul>
 
-    <div *ngIf="tradeImages.length">
+    <div *ngIf="tradeImages && tradeImages.length">
         <h5 class="text-center">Trade Offer Images</h5>
 
         <div class="text-center">

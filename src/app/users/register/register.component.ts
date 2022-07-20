@@ -72,7 +72,7 @@ export class RegisterComponent implements OnInit {
         profileImg: '/assets/swap-my-trade-profile.png',
         myTrades: myTrades,
         myTradeOffers: [],
-        mySwapRequests: []
+        mySwaps: []
       }
     )
 

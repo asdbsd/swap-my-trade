@@ -18,10 +18,15 @@ export class TradeOfferComponent implements OnInit, OnChanges {
 
   isTradeOfferPending: boolean = false;
 
-
   constructor() { }
 
   ngOnInit(): void {
+    this.isTradeOfferPending = this.tradeOffer.status.pending;
+
+  }
+
+  
+  ngOnChanges(changes: SimpleChanges) {
     this.isTradeOfferPending = this.tradeOffer.status.pending;
 
   }
@@ -43,9 +48,5 @@ export class TradeOfferComponent implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.isTradeOfferPending = this.tradeOffer.status.pending;
-
-  }
 
 }

@@ -133,7 +133,7 @@ export class OfferTradeComponent implements OnInit {
 
     try {
       await this.swapService.partialSwapUpdate(this.swap._id, this.swap);
-      await this.userService.partialProfileUpdate(this.offerUser._id, { myTradeOffers: Object.assign([], this.offerUser.myTradeOffers, [newTradeOffer])});
+      await this.userService.partialProfileUpdate(this.offerUser._id, { myTradeOffers: Object.assign([], [...this.offerUser.myTradeOffers, newTradeOffer])});
     } catch (err) {
       this.isUploading = false;
       this.uploading = 0;

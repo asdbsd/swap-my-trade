@@ -132,17 +132,18 @@ export class SwapDetailsComponent implements OnInit, OnDestroy {
         offer.user._id === event.target.id ? offer.status.accepted = true : offer.status.declined = true;
       });
       swap.status.completed = true;
-      this.swapService.partialSwapUpdate(swap._id, swap)
+      this.swapService.partialSwapUpdate(swap._id, swap);
 
       const currentTradeOffer = offerOwnerProfile.myTradeOffers.filter(offer => offer.swapId === swap._id).pop()!; 
       currentTradeOffer.status.pending = false;
       currentTradeOffer.status.accepted = true;
 
-      this.swapService.partialSwapUpdate(swap._id, swap).then(() => 
+
+      Promise.all([
+        this.swapService.partialSwapUpdate(swap._id, swap),
         this.userService.partialProfileUpdate(currentTradeOffer.user._id, offerOwnerProfile)
-          .then()
-          .catch(err => { throw new Error(err) })
-        ).catch(err => { throw new Error(err) })
+      ]).then(() => null).catch((err) => { throw new Error(err) })
+
     });
 
     setInterval(() => {

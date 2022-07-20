@@ -11,6 +11,7 @@ import { IProfile } from 'src/app/shared/interfaces/profiles';
 import { ITrade } from 'src/app/shared/interfaces/trade';
 import { validations } from 'src/app/shared/utils';
 import { TradeService } from 'src/app/trades/trade.service';
+import { UserService } from 'src/app/users/user.service';
 import { SwapService } from '../swap.service';
 
 @Component({
@@ -37,7 +38,8 @@ export class AddComponent implements OnInit, OnDestroy {
     private swapService: SwapService,
     private router: Router,
     private store: Store<IAppState>,
-    private imageStorage: ImageService
+    private imageStorage: ImageService,
+    private userService: UserService
   ) { }
 
 
@@ -71,15 +73,18 @@ export class AddComponent implements OnInit, OnDestroy {
 
     try {
       if (this.images.length) { this.swapImages = this.images.map((v: any) => v.name) }
-      const swapRef = await this.swapService.addSwap(
-        Object.assign({}, form.value, {
-          tradeOffers: [], status: { completed: false }, _ownerId: this.currentUser._id, swapImages: this.swapImages, 
-        })
-      );
+      const newSwap =  Object.assign({}, form.value, {
+        tradeOffers: [], status: { completed: false }, _ownerId: this.currentUser._id, swapImages: this.swapImages, 
+      })
+
+      const [ swapRef ] = await Promise.all(([
+        this.swapService.addSwap(newSwap),
+        this.userService.partialProfileUpdate(this.currentUser._id, { mySwaps: Object.assign([], [...this.currentUser.mySwaps, newSwap])})
+      ]));
 
       if (this.images.length) {
         for (let i = 0; i < this.images.length; i++) {
-          this.uploading = Math.round((100 * i) / this.images.length);
+          this.uploading = Math.round((100 * (i + 1)) / this.images.length);
           try {
             await this.imageStorage.uploadSwapsImg(swapRef.id, this.images[i].name, this.images[i]);
           } catch (err) {
@@ -105,7 +110,6 @@ export class AddComponent implements OnInit, OnDestroy {
       }, 3500)
       return;
     }
-
 
   }
 
